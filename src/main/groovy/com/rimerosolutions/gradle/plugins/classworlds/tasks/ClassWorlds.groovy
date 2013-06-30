@@ -16,6 +16,7 @@
 package com.rimerosolutions.gradle.plugins.classworlds.tasks
 
 import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginExtension
+import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
 import org.gradle.api.artifacts.DependencySet
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ModuleVersionIdentifier
@@ -38,46 +39,57 @@ import org.gradle.api.tasks.util.PatternSet
 import org.gradle.api.tasks.Copy
 import org.gradle.api.InvalidUserDataException
 
+/**
+ * Main task provided by the ClassWorlds plugin
+ *
+ * @author Yves Zoundi
+ */
 class ClassWorlds extends DefaultTask {
 
         @TaskAction assemble(){
+                // Get the file list of dependencies for relevant configurations
                 def compileDeps = project.configurations.compile.files
                 def runtimeDeps = project.configurations.runtime.files
-                def archiveDeps = project.configurations.archives.allArtifacts.files.files                
+                def archiveDeps = project.configurations.archives.allArtifacts.files.files
+
+                // Combine all the libraries dependencies into one list
                 def allDeps = compileDeps + runtimeDeps + archiveDeps
 
-                def destDir = new File(project.buildDir.absolutePath, "classworlds")
-                def bootDir = new File(destDir.absolutePath, "boot")
-                def libDir  = new File(destDir.absolutePath, "lib")
-                def etcDir  = new File(destDir.absolutePath, "etc")
-                def binDir  = new File(destDir.absolutePath, "bin")
+                def stagingDir = new File(project.buildDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.STAGING)
+                def bootDir = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BOOT)
+                def libDir  = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.LIB)
+                def etcDir  = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.ETC)
+                def binDir  = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BIN)
 
-                ant.mkdir(dir:destDir)
+                // Create assembly directory layout
+                ant.mkdir(dir:stagingDir)
                 ant.mkdir(dir:etcDir)
                 ant.mkdir(dir:binDir)
                 ant.mkdir(dir:bootDir)
                 ant.mkdir(dir:libDir)
 
+                // Locate the classworlds dependency jar file from the buildscript classpath
                 ResolvedArtifact classworldsJarArtifact = project.buildscript.configurations.classpath.resolvedConfiguration.resolvedArtifacts.find { it ->
                         ModuleVersionIdentifier mvi = it.moduleVersion.id
-                        mvi.group == "classworlds" && mvi.name == "classworlds" && it.type == "jar"
+
+                        (mvi.group == ClassWorldsPluginConstants.CLASSWORLDS_GROUP_ID &&
+                         mvi.name == ClassWorldsPluginConstants.CLASSWORLDS_ARTIFACT_ID &&
+                         it.type == ClassWorldsPluginConstants.CLASSWORLDS_ARTIFACT_TYPE)
                 }
 
-                project.copy  {
-                        from allDeps
-                        into libDir
-                }
-
-                def classworldsClosure = project.extensions.getByName('classworlds')
-
+                // Validate the plugin configuration
+                def classworldsClosure = project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME)
                 validatePluginConfiguration(classworldsClosure)
 
                 String appMainClassName = classworldsClosure.appMainClassName
                 String appHomeEnvName = classworldsClosure.appLocationEnvVariableName
 
+                copyApplicationDependenciesToLibDir(allDeps, libDir)
                 copyClassWorldsJarToBootDir(classworldsJarArtifact.file, bootDir)
-                generateLauncherConfiguration(etcDir, appMainClassName, allDeps)
+                generateLauncherConfigurationFile(etcDir, appMainClassName, allDeps)
                 generateLauncherScripts(binDir, classworldsJarArtifact.file.name, appHomeEnvName)
+                generateAssemblyZip(stagingDir)
+                cleanupStagingArea(stagingDir)
         }
 
         private def validatePluginConfiguration(ClassWorldsPluginExtension classworldsClosure) {
@@ -86,7 +98,7 @@ class ClassWorlds extends DefaultTask {
                         sb.append("The property \"appLocationEnvVariableName\" is missing or empty from the \"classworlds\" block in the Gradle build file.\n")
                         sb.append("\"appLocationEnvVariableName\" should be assigned to the expected environment variable used to locate your app folder.\n")
 
-                        throw new InvalidUserDataException(sb.append(sampleConfigurationBlock()).toString())
+                        throw new InvalidUserDataException(sb.append(getConfigurationBlockExample()).toString())
                 }
 
                 if (!classworldsClosure.appMainClassName) {
@@ -94,9 +106,15 @@ class ClassWorlds extends DefaultTask {
                         sb.append("The property \"appMainClassName\" is missing or empty from the \"classworlds\" block in the Gradle build file.\n")
                         sb.append("\"appMainClassName\" should be assigned to the main class of the generated launcher.\n")
 
-                        throw new InvalidUserDataException(sb.append(sampleConfigurationBlock()).toString())
+                        throw new InvalidUserDataException(sb.append(getConfigurationBlockExample()).toString())
                 }
+        }
 
+        private def copyApplicationDependenciesToLibDir(Collection libFiles, File libDir) {
+                project.copy  {
+                        from libFiles
+                        into libDir
+                }
         }
 
         private def copyClassWorldsJarToBootDir(File bootJarArtifact, File bootDir) {
@@ -106,12 +124,23 @@ class ClassWorlds extends DefaultTask {
                 }
         }
 
-        private String sampleConfigurationBlock() {
-                return "\nSample configuration:\n\nclassworlds {\n\tappMainClassName=\"com.Main\"\n\tappLocationEnvVariableName=\"grails_home\"\n}"
+        private def generateAssemblyZip(File stagingDir) {
+                String assemblyName = "${project.name}-${project.version}"
+                
+                ant.zip(destfile: new File(project.buildDir.absolutePath, "${assemblyName}.zip")) {
+                        zipfileset(dir:stagingDir, prefix:assemblyName)
+                }
+        }
+
+        private def cleanupStagingArea(File stagingDir) {
+                ant.delete(dir:stagingDir, includeEmptyDirs:true, verbose: true, failonerror: false, quiet:true)
+        }
+        
+        private static String getConfigurationBlockExample() {
+                return "\nSample configuration:\n\nclassworlds {\n\tappMainClassName=\"com.Main\"\n\tappLocationEnvVariableName=\"application_home\"\n}"
         }
 
         private def generateLauncherScripts(File binDir, String bootJarFileName, String appHome) {
-                def templatesLocation = "com/rimerosolutions/gradle/plugins/classworlds/templates/"
                 def shellHeader = "#!/bin/sh"
                 def launcherFileNames = ["launcher.sh", "launcher.bat"]
 
@@ -121,10 +150,10 @@ class ClassWorlds extends DefaultTask {
 
                         launcherFile.withWriter { w ->
                                 def engine = new groovy.text.GStringTemplateEngine()
-                                def tplLocation = templatesLocation + launcherName
+                                def tplLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/${launcherName}"
                                 def templateUrl = Thread.currentThread().getContextClassLoader().getResource(tplLocation)
                                 def template = engine.createTemplate(templateUrl)
-                                
+
                                 template.make(tplModel).writeTo(w)
                         }
 
@@ -132,16 +161,16 @@ class ClassWorlds extends DefaultTask {
                 }
         }
 
-        private def generateLauncherConfiguration(File cfgDir, String mainClassName, Collection libs) {
-                def tplLocation = "com/rimerosolutions/gradle/plugins/classworlds/templates/classworlds-template.groovy"
-                File launcherCfg = new File(cfgDir.absolutePath, "classworlds.conf")
+        private def generateLauncherConfigurationFile(File cfgDir, String mainClassName, Collection libs) {
+                def tplLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/classworlds-template.groovy"
+                File launcherCfgFile = new File(cfgDir.absolutePath, "classworlds.conf")
                 def tplModel = [libs:libs, mainClassName:mainClassName]
 
-                launcherCfg.withWriter { w ->
+                launcherCfgFile.withWriter { w ->
                         def engine = new groovy.text.GStringTemplateEngine()
                         def templateUrl = Thread.currentThread().getContextClassLoader().getResource(tplLocation)
                         def template = engine.createTemplate(templateUrl)
-                        
+
                         template.make(tplModel).writeTo(w)
                 }
         }

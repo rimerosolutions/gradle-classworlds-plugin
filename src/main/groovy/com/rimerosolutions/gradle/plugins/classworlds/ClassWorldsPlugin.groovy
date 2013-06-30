@@ -23,18 +23,14 @@ import org.gradle.api.artifacts.Dependency
 import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorlds
 
 class ClassWorldsPlugin implements Plugin<Project> {
-        static final String CLASSWORLDS_TASK_NAME = "classworlds"
-        static final String CLASSWORLDS_TASK_DESCRIPTION = "Generates a runnable application assembly using ClassWorlds as application launcher."
-        static final String CLASSWORLDS_GROUP = "ClassWorlds"
-        static final String CLASSWORDS_STAGE_DIR = "classworlds"
 
         @Override
         public void apply(Project project) {
                 project.extensions.classworlds = new ClassWorldsPluginExtension()
-                
-                Task classworlds = project.tasks.create(CLASSWORLDS_TASK_NAME, ClassWorlds)
-                classworlds.description = CLASSWORLDS_TASK_DESCRIPTION
-                classworlds.group = CLASSWORLDS_GROUP
-                classworlds.dependsOn "build"
+
+                Task classworlds = project.tasks.create(ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_NAME, ClassWorlds)
+                classworlds.description = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_DESCRIPTION
+                classworlds.group = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_GROUP
+                classworlds.dependsOn ClassWorldsPluginConstants.TaskSettings.BUILD_TASK_NAME
         }
 }
