@@ -52,7 +52,7 @@ The first step consists into configuring the =buildscript= closure at the top of
 
 ** Plugin configuration
 The plugin expects two parameters (that are required):
- - =appMainClassName=: This is the full class name of the entry point of your application containing a =main= method.
+ - =appMainClassName=: This is the full class name of your main class with a =main= method.
  - =appLocationEnvVariableName=: This is the environment variable name used to locate your application installation, as well as for bootstrapping the launcher.
 
 The configuration parameters can be specified inside a =classworlds= block in your Gradle build file.
