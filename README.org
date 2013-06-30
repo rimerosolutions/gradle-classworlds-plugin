@@ -69,10 +69,10 @@ The =classworlds= task generates a zip assembly of your project dependencies wit
 Running the =classworlds= task will also trigger the =build= task to generate the project artifacts.
  : gradle classworlds
 
-* Testing the generated runnable distribution
-You must first set an environment variable matching the =appLocationEnvVariableName= parameter specified in your Gradle build file.
-
+* Testing the generated distribution
 Unzip the generated zip assembly which is inside your build folder to the location of your choice.
+
+You must first set an environment variable matching the =appLocationEnvVariableName= parameter specified in your Gradle build file.
 
 For the instructions below, we'll suppose that =appLocationEnvVariableName= is set to =YOUR_APPLICATION_ENVIRONMENT_VARIABLE=.
 
