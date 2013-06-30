@@ -22,6 +22,11 @@ import org.gradle.api.Action
 import org.gradle.api.artifacts.Dependency
 import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorlds
 
+/**
+ * ClassWorlds Plugin implementation that registers the <code>classworlds</code> task.
+ *
+ * @author Yves Zoundi
+ */
 class ClassWorldsPlugin implements Plugin<Project> {
 
         @Override

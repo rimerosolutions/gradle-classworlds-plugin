@@ -15,26 +15,58 @@
  */
 package com.rimerosolutions.gradle.plugins.classworlds
 
+/**
+ * ClassWorlds Plugin Constants.
+ *
+ * @author Yves Zoundi
+ */
 public final class ClassWorldsPluginConstants {
 
+        /** Plugin extension name */
         static final String CLASSWORLDS_EXTENSION_NAME = "classworlds";
-        static final String CLASSWORLDS_ARTIFACT_ID = "classworlds";
+
+        /** Classworlds artifact ID */
+        static final String CLASSWORLDS_ARTIFACT_ID = "plexus-classworlds"
+
+        /** ClassWorlds artifact type */
         static final String CLASSWORLDS_ARTIFACT_TYPE = "jar";
-        static final String CLASSWORLDS_GROUP_ID = "classworlds";
+
+        /** ClassWorlds artifact group id */
+        static final String CLASSWORLDS_GROUP_ID = "org.codehaus.plexus";
+
+        /** Launcher templates classpath location */
         static final String TEMPLATES_LOCATION = "com/rimerosolutions/gradle/plugins/classworlds/templates";
 
+        /** ClassWorlds task constants */
         public static final class TaskSettings {
+                /** Gradle build task name */
                 public static final String BUILD_TASK_NAME = "build";
+                
+                /** Gradle ClassWorlds plugin task name */
                 public static final String CLASSWORLDS_TASK_NAME = "classworlds";
+
+                /** Gradle ClassWorlds Plugin task description*/
                 public static final String CLASSWORLDS_TASK_DESCRIPTION = "Generates a runnable application assembly using ClassWorlds as application launcher.";
+
+                /** Gradle ClassWorlds task group */
                 public static final String CLASSWORLDS_GROUP = "classworlds";
         }
 
+        /** Assembly directory file names constants */
         public static class AssemblyDirNames {
+                /** Staging directory name */
                 public static final String STAGING = "classworlds";
+
+                /** Boot directory name */
                 public static final String BOOT = "boot";
+
+                /** Lib directory name */
                 public static final String LIB = "lib";
+
+                /** Etc directory name */
                 public static final String ETC = "etc";
+                
+                /** Bin directory name */
                 public static final String BIN = "bin";
         }
 

@@ -15,7 +15,15 @@
  */
 package com.rimerosolutions.gradle.plugins.classworlds
 
+/**
+ * ClassWorlds Plugin extension.
+ *
+ * @author Yves Zoundi
+ */
 class ClassWorldsPluginExtension {
+        /** Application location environment variable name */
         String appLocationEnvVariableName
+
+        /** Application main class name */
         String appMainClassName
 }

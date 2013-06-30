@@ -25,7 +25,7 @@ version       = "1.0"
 group         = "com.rimerosolutions.gradle.plugins"
 description   = "Gradle ClassWorlds Plugin"
 
-def classworldsVersion = "1.0"
+def classworldsVersion = "2.4.2"
 def junitVersion       = "4.11"
 
 repositories {
@@ -36,7 +36,7 @@ repositories {
 dependencies {
         compile localGroovy()
         compile gradleApi()
-        compile "classworlds:classworlds:${classworldsVersion}"
+        compile "org.codehaus.plexus:plexus-classworlds:${classworldsVersion}"
             
         testCompile "junit:junit:${junitVersion}"
 }
