@@ -1,8 +1,8 @@
-#+TITLE: Gradle ClassWorlds Plugin
+#+TITLE: Gradle ClassWorlds Assembly Plugin
 
 * Summary
 
-The Gradle ClassWorlds Plugin is a simple [[http://www.gradle.org/][Gradle]] plugin that generates a simple runnable distribution of your project, using [[http://classworlds.codehaus.org/launchusage.html][Classworlds]] as application launcher.
+The Gradle ClassWorlds Assembly Plugin is a simple [[http://www.gradle.org/][Gradle]] plugin that generates a simple runnable distribution of your project, using [[http://classworlds.codehaus.org/launchusage.html][Classworlds]] as application launcher.
 
 Sometimes it is easier to ship your application as a simple *zip* archive instead of bothering with a sophisticated software installer.
 
@@ -91,3 +91,4 @@ Use =setenv= instead of =export= if you're using =csh= or =tcsh= as UNIX/Linux s
  - Auto-detection of the application installation folder from the launcher to avoid setting environment variables.
  - Publishing of the plugin to a free repository such as [[https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide][Sonatype]] for convenience.
  - Refactoring to make the code actually easily testable.
+ - Using wildcards in the launcher configuration for jar file patterns.
