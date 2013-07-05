@@ -21,10 +21,6 @@ apply plugin: "maven"
 sourceCompatibility = "1.6"
 targetCompatibility = "1.6"
 
-version       = "1.0"
-group         = "com.rimerosolutions.gradle.plugins"
-description   = "Gradle ClassWorlds Plugin"
-
 def classworldsVersion = "2.4.2"
 def junitVersion       = "4.11"
 
@@ -37,11 +33,10 @@ dependencies {
         compile localGroovy()
         compile gradleApi()
         compile "org.codehaus.plexus:plexus-classworlds:${classworldsVersion}"
-            
+
         testCompile "junit:junit:${junitVersion}"
 }
 
 task wrapper(type: Wrapper, description: "Generates the Gradle wrapper.") {
         gradleVersion = "1.6"
-        jarFile = "wrapper/wrapper.jar"
 }
