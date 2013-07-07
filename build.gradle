@@ -13,30 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: "idea"
-apply plugin: "eclipse"
-apply plugin: "groovy"
-apply plugin: "maven"
-
-sourceCompatibility = "1.6"
-targetCompatibility = "1.6"
-
-def classworldsVersion = "2.4.2"
-def junitVersion       = "4.11"
-
-repositories {
+buildscript {
+    repositories {
         mavenCentral()
-        mavenLocal()
+    }
+    
+    apply from: file('gradle/buildscript.gradle'), to: buildscript 
 }
+
+allprojects {
+    repositories { 
+        mavenCentral()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+apply from: file('gradle/artifacts.gradle')
+apply from: file('gradle/maven.gradle')
+apply from: file('gradle/check.gradle')
+apply from: file('gradle/license.gradle')
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
 
 dependencies {
         compile localGroovy()
         compile gradleApi()
-        compile "org.codehaus.plexus:plexus-classworlds:${classworldsVersion}"
+        compile 'org.codehaus.plexus:plexus-classworlds:2.4.2'
 
-        testCompile "junit:junit:${junitVersion}"
+        testCompile 'junit:junit:4.11'
 }
 
-task wrapper(type: Wrapper, description: "Generates the Gradle wrapper.") {
-        gradleVersion = "1.6"
+task wrapper(type: Wrapper, description: 'Generates the Gradle wrapper.') {
+        gradleVersion = '1.6'
 }

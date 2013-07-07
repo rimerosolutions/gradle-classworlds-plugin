@@ -1,0 +1,65 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+signing {
+        required = { gradle.taskGraph.hasTask("uploadArchives") && !version.endsWith("SNAPSHOT") }
+        sign configurations.archives
+}
+
+uploadArchives {
+        repositories {
+                mavenDeployer {
+                        beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+                        uniqueVersion = false
+
+                        def repoUsername = ''
+                        def repoPassword = ''
+
+                        if (project.hasProperty('sonatype.username')) {
+                                repoUsername = project.getProperty('sonatype.username')
+                        }
+
+                        if (project.hasProperty('sonatype.password')) {
+                                repoPassword = project.getProperty('sonatype.password')
+                        }
+
+                        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                                authentication(userName: repoUsername, password: repoPassword)
+                        }
+
+                        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                                authentication(userName: repoUsername, password: repoPassword)
+                        }
+
+                        pom.project {
+                                name "${project.name}"
+                                description "${project.description}"
+
+                                url "https://github.com/${organizationId}/${project.name}"
+
+                                scm {
+                                        url "https://github.com/${organizationId}/${project.name}"
+                                        connection "scm:git:https://github.com/${organizationId}/${project.name}.git"
+                                        developerConnection "scm:git:https://github.com/${organizationId}/${project.name}.git"
+                                }
+
+                                licenses {
+                                        license {
+                                                name "The Apache Software License, Version 2.0"
+                                                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                                                distribution "repo"
+                                        }
+                                }
+
+                                developers {
+                                        developer {
+                                                id "${organizationId}"
+                                                name "Yves Zoundi"
+                                                email "${organizationId}@gmail.com"
+                                        }
+                                }
+                        }
+                }
+
+        }
+}

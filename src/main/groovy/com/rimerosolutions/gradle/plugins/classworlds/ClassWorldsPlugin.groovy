@@ -18,8 +18,6 @@ package com.rimerosolutions.gradle.plugins.classworlds
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.Action
-import org.gradle.api.artifacts.Dependency
 import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorlds
 
 /**
@@ -30,12 +28,14 @@ import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorlds
 class ClassWorldsPlugin implements Plugin<Project> {
 
         @Override
-        public void apply(Project project) {
+        void apply(Project project) {
                 project.extensions.classworlds = new ClassWorldsPluginExtension()
 
                 Task classworlds = project.tasks.create(ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_NAME, ClassWorlds)
                 classworlds.description = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_DESCRIPTION
                 classworlds.group = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_GROUP
                 classworlds.dependsOn ClassWorldsPluginConstants.TaskSettings.BUILD_TASK_NAME
+
+                classworlds.inputs.mainClassName { project.extension.classworlds.mainClassName }
         }
 }

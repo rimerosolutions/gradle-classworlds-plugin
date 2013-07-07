@@ -21,6 +21,7 @@ import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
 import org.gradle.api.artifacts.ModuleVersionIdentifier
 import org.gradle.api.artifacts.ResolvedArtifact
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.TaskAction
 
@@ -30,6 +31,9 @@ import org.gradle.api.tasks.TaskAction
  * @author Yves Zoundi
  */
 class ClassWorlds extends DefaultTask {
+
+        @Input
+        String mainClassName
 
         @TaskAction assemble(){
                 // Get the file list of dependencies for relevant configurations
@@ -47,7 +51,7 @@ class ClassWorlds extends DefaultTask {
                 def binDir     = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BIN)
 
                 // Create assembly directory layout
-                logger.info "Creating standard folder structure"
+                logger.info 'Creating standard folder structure'
 
                 ant.mkdir(dir:stagingDir)
                 ant.mkdir(dir:etcDir)
@@ -79,37 +83,37 @@ class ClassWorlds extends DefaultTask {
                 cleanupStagingArea(stagingDir)
         }
 
-        private def validatePluginConfiguration(ClassWorldsPluginExtension classworldsClosure) {
-                logger.info "Validating ClassWorlds configuration"
+        private validatePluginConfiguration(ClassWorldsPluginExtension classworldsClosure) {
+                logger.info 'Validating ClassWorlds configuration'
 
                 if (!classworldsClosure.appLocationEnvVariableName) {
                         StringBuilder sb = new StringBuilder(256)
 
-                        sb.append("The property \"appLocationEnvVariableName\" is missing or empty from the \"classworlds\" block in the Gradle build file.\n")
-                        sb.append("\"appLocationEnvVariableName\" should be assigned to the expected environment variable used to locate your app folder.\n")
+                        sb.append('The property \"appLocationEnvVariableName\" is missing or empty from the \"classworlds\" block in the Gradle build file.\n')
+                        sb.append('\"appLocationEnvVariableName\" should be assigned to the expected environment variable used to locate your app folder.\n')
 
-                        throw new InvalidUserDataException(sb.append(getConfigurationBlockExample()).toString())
+                        throw new InvalidUserDataException(sb.append(configurationBlockExample()).toString())
                 }
 
                 if (!classworldsClosure.appMainClassName) {
                         StringBuilder sb = new StringBuilder(256)
 
-                        sb.append("The property \"appMainClassName\" is missing or empty from the \"classworlds\" block in the Gradle build file.\n")
-                        sb.append("\"appMainClassName\" should be assigned to the main class of the generated launcher.\n")
+                        sb.append('The property \"appMainClassName\" is missing or empty from the \"classworlds\" block in the Gradle build file.\n')
+                        sb.append('\"appMainClassName\" should be assigned to the main class of the generated launcher.\n')
 
-                        throw new InvalidUserDataException(sb.append(getConfigurationBlockExample()).toString())
+                        throw new InvalidUserDataException(sb.append(configurationBlockExample()).toString())
                 }
         }
 
-        private def copyApplicationDependenciesToLibDir(Collection libFiles, File libDir) {
+        private copyApplicationDependenciesToLibDir(Collection libFiles, File libDir) {
                 project.copy  {
                         from libFiles
                         into libDir
                 }
         }
 
-        private def copyClassWorldsJarToBootDir(File bootJarArtifact, File bootDir) {
-                logger.info "Copying dependencies to project folder"
+        private copyClassWorldsJarToBootDir(File bootJarArtifact, File bootDir) {
+                logger.info 'Copying dependencies to project folder'
 
                 project.copy {
                         from bootJarArtifact
@@ -117,8 +121,8 @@ class ClassWorlds extends DefaultTask {
                 }
         }
 
-        private def generateAssemblyZip(File stagingDir) {
-                logger.info "Creating zip assembly"
+        private generateAssemblyZip(File stagingDir) {
+                logger.info 'Creating zip assembly'
 
                 def assemblyName = "${project.name}-${project.version}"
                 def assemblyZipFile = new File(project.buildDir.absolutePath, "${assemblyName}.zip")
@@ -128,20 +132,20 @@ class ClassWorlds extends DefaultTask {
                 }
         }
 
-        private def cleanupStagingArea(File stagingDir) {
+        private cleanupStagingArea(File stagingDir) {
                 ant.delete(dir:stagingDir, includeEmptyDirs:true, verbose: true, failonerror: false, quiet:true)
         }
 
-        private static String getConfigurationBlockExample() {
-                return "\nSample configuration:\n\nclassworlds {\n\tappMainClassName=\"com.Main\"\n\tappLocationEnvVariableName=\"application_home\"\n}"
+        private static String configurationBlockExample() {
+                '\nSample configuration:\n\nclassworlds {\n\tappMainClassName=\"com.Main\"\n\tappLocationEnvVariableName=\"application_home\"\n}'
         }
 
-        private def generateLauncherScripts(File binDir, String bootJarFileName, String appHome) {
-                logger.info "Generating launchers scripts"
+        private generateLauncherScripts(File binDir, String bootJarFileName, String appHome) {
+                logger.info 'Generating launchers scripts'
 
-                def shellHeaders = ["#!/usr/bin/env bash", ""]
-                def shellComments = ["#Generated by Gradle ClassWorlds Plugin", "@REM Generated by Gradle ClassWorlds Plugin"]
-                def launcherFileNames = ["launcher.sh", "launcher.bat"]
+                def shellHeaders = ['#!/usr/bin/env bash', '']
+                def shellComments = ['#Generated by Gradle ClassWorlds Plugin', '@REM Generated by Gradle ClassWorlds Plugin']
+                def launcherFileNames = ['launcher.sh', 'launcher.bat']
 
                 launcherFileNames.eachWithIndex { launcherName, listIndex ->
                         def launcherFile = new File(binDir.absolutePath, launcherName)
@@ -152,7 +156,7 @@ class ClassWorlds extends DefaultTask {
                         launcherFile.withWriter { w ->
                                 def engine = new groovy.text.GStringTemplateEngine()
                                 def tplLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/${launcherName}"
-                                def templateUrl = Thread.currentThread().getContextClassLoader().getResource(tplLocation)
+                                def templateUrl = Thread.currentThread().contextClassLoader.getResource(tplLocation)
                                 def template = engine.createTemplate(templateUrl)
 
                                 template.make(tplModel).writeTo(w)
@@ -162,14 +166,14 @@ class ClassWorlds extends DefaultTask {
                 }
         }
 
-        private def generateLauncherConfigurationFile(File cfgDir, String mainClassName, Collection libs) {
+        private generateLauncherConfigurationFile(File cfgDir, String mainClassName, Collection libs) {
                 def tplLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/classworlds-template.groovy"
-                def launcherCfgFile = new File(cfgDir.absolutePath, "classworlds.conf")
+                def launcherCfgFile = new File(cfgDir.absolutePath, 'classworlds.conf')
                 def tplModel = [libs:libs, mainClassName:mainClassName]
 
                 launcherCfgFile.withWriter { w ->
                         def engine = new groovy.text.GStringTemplateEngine()
-                        def templateUrl = Thread.currentThread().getContextClassLoader().getResource(tplLocation)
+                        def templateUrl = Thread.currentThread().contextClassLoader.getResource(tplLocation)
                         def template = engine.createTemplate(templateUrl)
 
                         template.make(tplModel).writeTo(w)

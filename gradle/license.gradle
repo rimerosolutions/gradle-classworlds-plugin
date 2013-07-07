@@ -1,0 +1,11 @@
+apply plugin: 'license'
+
+license {
+        header rootProject.file('codequality/HEADER')
+        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+        skipExistingHeaders true
+
+        mapping {
+                properties='SCRIPT_STYLE'
+        }
+}

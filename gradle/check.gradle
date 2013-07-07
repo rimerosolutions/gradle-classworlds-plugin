@@ -1,0 +1,14 @@
+allprojects {
+        apply plugin: 'cobertura'
+        apply plugin: 'codenarc'
+}
+
+cobertura {
+        sourceDirs = sourceSets.main.groovy.srcDirs
+        format = 'html'
+        includes = ['**/*.groovy']
+}
+
+codenarc {
+        configFile = new File("$projectDir/codequality/rules.groovy")
+}

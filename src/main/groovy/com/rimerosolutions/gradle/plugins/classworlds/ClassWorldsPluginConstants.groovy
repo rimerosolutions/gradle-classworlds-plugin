@@ -1,7 +1,7 @@
 /*
  * Copyright 2013 Rimero Solutions
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -20,54 +20,54 @@ package com.rimerosolutions.gradle.plugins.classworlds
  *
  * @author Yves Zoundi
  */
-public final class ClassWorldsPluginConstants {
+final class ClassWorldsPluginConstants {
 
         /** Plugin extension name */
-        static final String CLASSWORLDS_EXTENSION_NAME = "classworlds";
+        static final String CLASSWORLDS_EXTENSION_NAME = 'classworlds'
 
         /** Classworlds artifact ID */
-        static final String CLASSWORLDS_ARTIFACT_ID = "plexus-classworlds"
+        static final String CLASSWORLDS_ARTIFACT_ID = 'plexus-classworlds'
 
         /** ClassWorlds artifact type */
-        static final String CLASSWORLDS_ARTIFACT_TYPE = "jar";
+        static final String CLASSWORLDS_ARTIFACT_TYPE = 'jar'
 
         /** ClassWorlds artifact group id */
-        static final String CLASSWORLDS_GROUP_ID = "org.codehaus.plexus";
+        static final String CLASSWORLDS_GROUP_ID = 'org.codehaus.plexus'
 
         /** Launcher templates classpath location */
-        static final String TEMPLATES_LOCATION = "com/rimerosolutions/gradle/plugins/classworlds/templates";
+        static final String TEMPLATES_LOCATION = 'com/rimerosolutions/gradle/plugins/classworlds/templates'
 
         /** ClassWorlds task constants */
-        public static final class TaskSettings {
+        static final class TaskSettings {
                 /** Gradle build task name */
-                public static final String BUILD_TASK_NAME = "build";
+                public static final String BUILD_TASK_NAME = 'build'
                 
                 /** Gradle ClassWorlds plugin task name */
-                public static final String CLASSWORLDS_TASK_NAME = "classworlds";
+                public static final String CLASSWORLDS_TASK_NAME = 'classworlds'
 
                 /** Gradle ClassWorlds Plugin task description*/
-                public static final String CLASSWORLDS_TASK_DESCRIPTION = "Generates a runnable application assembly using ClassWorlds as application launcher.";
+                public static final String CLASSWORLDS_TASK_DESCRIPTION = 'Generates a runnable application assembly using ClassWorlds as application launcher.'
 
                 /** Gradle ClassWorlds task group */
-                public static final String CLASSWORLDS_GROUP = "classworlds";
+                public static final String CLASSWORLDS_GROUP = 'classworlds'
         }
 
         /** Assembly directory file names constants */
-        public static class AssemblyDirNames {
+        static class AssemblyDirNames {
                 /** Staging directory name */
-                public static final String STAGING = "classworlds";
+                public static final String STAGING = 'classworlds'
 
                 /** Boot directory name */
-                public static final String BOOT = "boot";
+                public static final String BOOT = 'boot'
 
                 /** Lib directory name */
-                public static final String LIB = "lib";
+                public static final String LIB = 'lib'
 
                 /** Etc directory name */
-                public static final String ETC = "etc";
+                public static final String ETC = 'etc'
                 
                 /** Bin directory name */
-                public static final String BIN = "bin";
+                public static final String BIN = 'bin'
         }
 
 }
