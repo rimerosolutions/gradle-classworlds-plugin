@@ -18,7 +18,7 @@ package com.rimerosolutions.gradle.plugins.classworlds
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorlds
+import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorldsTask
 
 /**
  * ClassWorlds Plugin implementation that registers the <code>classworlds</code> task.
@@ -29,13 +29,17 @@ class ClassWorldsPlugin implements Plugin<Project> {
 
         @Override
         void apply(Project project) {
-                project.extensions.classworlds = new ClassWorldsPluginExtension()
+                project.extensions.classworlds = new ClassWorldsPluginExtension(project)
 
-                Task classworlds = project.tasks.create(ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_NAME, ClassWorlds)
+                Task classworlds = project.tasks.create(ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_NAME, ClassWorldsTask)
+
                 classworlds.description = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_DESCRIPTION
                 classworlds.group = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_GROUP
                 classworlds.dependsOn ClassWorldsPluginConstants.TaskSettings.BUILD_TASK_NAME
 
-                classworlds.inputs.mainClassName { project.extension.classworlds.mainClassName }
+                project.afterEvaluate {
+                        classworlds.appMainClassName { project.extension.classworlds.appMainClassName }
+                        classworlds.appLocationEnvVariableName { project.extension.classworlds.appLocationEnvVariableName }
+                }
         }
 }

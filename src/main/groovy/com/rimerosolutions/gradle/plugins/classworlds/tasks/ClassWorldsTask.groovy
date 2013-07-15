@@ -22,6 +22,9 @@ import org.gradle.api.artifacts.ModuleVersionIdentifier
 import org.gradle.api.artifacts.ResolvedArtifact
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.TaskAction
 
@@ -30,10 +33,25 @@ import org.gradle.api.tasks.TaskAction
  *
  * @author Yves Zoundi
  */
-class ClassWorlds extends DefaultTask {
+class ClassWorldsTask extends DefaultTask {
 
         @Input
-        String mainClassName
+        String appMainClassName
+
+        @OutputFile
+        @Optional
+        File assemblyFileName
+
+        @OutputDirectory
+        @Optional
+        File assemblyDirectory
+
+        @Optional
+        @Input
+        String appLocationEnvVariableName
+
+        @Input
+        List<ClassWorldsPluginConstants.AssemblyFormats> assemblyFormats = []
 
         @TaskAction assemble(){
                 // Get the file list of dependencies for relevant configurations
@@ -79,6 +97,11 @@ class ClassWorlds extends DefaultTask {
                 copyClassWorldsJarToBootDir(classworldsJarArtifact.file, bootDir)
                 generateLauncherConfigurationFile(etcDir, appMainClassName, allDeps)
                 generateLauncherScripts(binDir, classworldsJarArtifact.file.name, appHomeEnvName)
+
+                if (classWorldsClosure.doWithStagingDir) {
+                        classWorldsClosure.doWithStagingDir(stagingDir)
+                }
+
                 generateAssemblyZip(stagingDir)
                 cleanupStagingArea(stagingDir)
         }
@@ -124,11 +147,24 @@ class ClassWorlds extends DefaultTask {
         private generateAssemblyZip(File stagingDir) {
                 logger.info 'Creating zip assembly'
 
-                def assemblyName = "${project.name}-${project.version}"
-                def assemblyZipFile = new File(project.buildDir.absolutePath, "${assemblyName}.zip")
+                if(!assemblyFileName) {
+                        assemblyFileName = "${project.name}-${project.version}"
+                }
+
+                if (!assemblyDirectory) {
+                        assemblyDirectory = new File(project.buildDir.absolutePath)
+                }
+
+                if (!assemblyFormats) {
+                        assemblyFormats = [
+                                ClassWorldsPluginConstants.AssemblyFormats.ZIP
+                        ]
+                }
+
+                def assemblyZipFile = new File(assemblyZipDirectory.absolutePath, "${assemblyFileName}.zip")
 
                 ant.zip(destfile: assemblyZipFile) {
-                        zipfileset(dir:stagingDir, prefix:assemblyName)
+                        zipfileset(dir:stagingDir, prefix:assemblyFileName)
                 }
         }
 

@@ -37,6 +37,10 @@ final class ClassWorldsPluginConstants {
         /** Launcher templates classpath location */
         static final String TEMPLATES_LOCATION = 'com/rimerosolutions/gradle/plugins/classworlds/templates'
 
+        enum AssemblyFormats {
+                ZIP, TAR
+        }
+        
         /** ClassWorlds task constants */
         static final class TaskSettings {
                 /** Gradle build task name */

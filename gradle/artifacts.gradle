@@ -1,5 +1,5 @@
-task javadocJar(type: Jar, dependsOn: groovydoc) {
-        classifier = 'javadoc'
+task groovydocJar(type: Jar, dependsOn: groovydoc) {
+        classifier = 'groovydoc'
         from "${project.docsDir}/groovydoc"
 }
 
@@ -10,7 +10,7 @@ task sourcesJar(type: Jar) {
 
 artifacts {
         archives jar
-        archives javadocJar
+        archives groovydocJar
         archives sourcesJar
 }
 

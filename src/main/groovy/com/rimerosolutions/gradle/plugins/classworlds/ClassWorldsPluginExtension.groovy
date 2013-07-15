@@ -15,15 +15,30 @@
  */
 package com.rimerosolutions.gradle.plugins.classworlds
 
+import org.gradle.api.Project
+
 /**
  * ClassWorlds Plugin extension.
  *
  * @author Yves Zoundi
  */
 class ClassWorldsPluginExtension {
-        /** Application location environment variable name */
-        String appLocationEnvVariableName
 
-        /** Application main class name */
+        String appLocationEnvVariableName
         String appMainClassName
+        String assemblyFileName
+        File assemblyDirectory
+        List<ClassWorldsPluginConstants.AssemblyFormats> assemblyFormats = []
+
+        ClassWorldsPluginExtension(Project project) {
+                assemblyDirectory = new File(project.buildDir.absolutePath)
+                assemblyFileName = "${project.name}-${project.version}"
+                appLocationEnvVariableName = 'APP_HOME'
+                assemblyFormats << ClassWorldsPluginConstants.AssemblyFormats.ZIP
+        }
+
+        def doWithStagingDir(File stagingFolder, Closure closure) {
+                closure.delegate = this
+                closure(stagingFolder)
+        }
 }
