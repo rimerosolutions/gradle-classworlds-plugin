@@ -38,9 +38,9 @@ class ClassWorldsTask extends DefaultTask {
         @Input
         String appMainClassName
 
-        @OutputFile
+        @Input
         @Optional
-        File assemblyFileName
+        String assemblyFileName
 
         @OutputDirectory
         @Optional
@@ -87,16 +87,17 @@ class ClassWorldsTask extends DefaultTask {
                 }
 
                 // Validate the plugin configuration
-                def classworldsClosure = project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME)
-                validatePluginConfiguration(classworldsClosure)
+                def classWorldsClosure = project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME)
+                validatePluginConfiguration(classWorldsClosure)
 
-                String appMainClassName = classworldsClosure.appMainClassName
-                String appHomeEnvName = classworldsClosure.appLocationEnvVariableName
+                appMainClassName = classWorldsClosure.appMainClassName
+                assemblyFileName = classWorldsClosure.assemblyFileName
+                appLocationEnvVariableName = classWorldsClosure.appLocationEnvVariableName
 
                 copyApplicationDependenciesToLibDir(allDeps, libDir)
                 copyClassWorldsJarToBootDir(classworldsJarArtifact.file, bootDir)
-                generateLauncherConfigurationFile(etcDir, appMainClassName, allDeps)
-                generateLauncherScripts(binDir, classworldsJarArtifact.file.name, appHomeEnvName)
+                generateLauncherConfigurationFile(etcDir, getAppMainClassName(), allDeps)
+                generateLauncherScripts(binDir, classworldsJarArtifact.file.name, getAppLocationEnvVariableName())
 
                 if (classWorldsClosure.doWithStagingDir) {
                         classWorldsClosure.doWithStagingDir(stagingDir)
@@ -147,24 +148,24 @@ class ClassWorldsTask extends DefaultTask {
         private generateAssemblyZip(File stagingDir) {
                 logger.info 'Creating zip assembly'
 
-                if(!assemblyFileName) {
+                if(!getAssemblyFileName()) {
                         assemblyFileName = "${project.name}-${project.version}"
                 }
 
-                if (!assemblyDirectory) {
+                if (!getAssemblyDirectory()) {
                         assemblyDirectory = new File(project.buildDir.absolutePath)
                 }
 
-                if (!assemblyFormats) {
+                if (!getAssemblyFormats()) {
                         assemblyFormats = [
                                 ClassWorldsPluginConstants.AssemblyFormats.ZIP
                         ]
                 }
 
-                def assemblyZipFile = new File(assemblyZipDirectory.absolutePath, "${assemblyFileName}.zip")
+                def assemblyZipFile = new File(getAssemblyDirectory().absolutePath, "${assemblyFileName}.zip")
 
                 ant.zip(destfile: assemblyZipFile) {
-                        zipfileset(dir:stagingDir, prefix:assemblyFileName)
+                        zipfileset(dir:stagingDir, prefix:getAssemblyFileName())
                 }
         }
 

@@ -28,14 +28,7 @@ class ClassWorldsPluginExtension {
         String appMainClassName
         String assemblyFileName
         File assemblyDirectory
-        List<ClassWorldsPluginConstants.AssemblyFormats> assemblyFormats = []
-
-        ClassWorldsPluginExtension(Project project) {
-                assemblyDirectory = new File(project.buildDir.absolutePath)
-                assemblyFileName = "${project.name}-${project.version}"
-                appLocationEnvVariableName = 'APP_HOME'
-                assemblyFormats << ClassWorldsPluginConstants.AssemblyFormats.ZIP
-        }
+        List<ClassWorldsPluginConstants.AssemblyFormats> assemblyFormats = []        
 
         def doWithStagingDir(File stagingFolder, Closure closure) {
                 closure.delegate = this

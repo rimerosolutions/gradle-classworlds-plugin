@@ -29,17 +29,28 @@ class ClassWorldsPlugin implements Plugin<Project> {
 
         @Override
         void apply(Project project) {
-                project.extensions.classworlds = new ClassWorldsPluginExtension(project)
+                project.extensions.create('classworlds', ClassWorldsPluginExtension)
 
-                Task classworlds = project.tasks.create(ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_NAME, ClassWorldsTask)
+                project.task(type: ClassWorldsTask, ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_NAME) {
+                        description = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_DESCRIPTION
+                        group = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_GROUP
+                        dependsOn ClassWorldsPluginConstants.TaskSettings.BUILD_TASK_NAME
 
-                classworlds.description = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_DESCRIPTION
-                classworlds.group = ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_GROUP
-                classworlds.dependsOn ClassWorldsPluginConstants.TaskSettings.BUILD_TASK_NAME
+                        conventionMapping.appMainClassName = {
+                                project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME).appMainClassName
+                        }
 
-                project.afterEvaluate {
-                        classworlds.appMainClassName { project.extension.classworlds.appMainClassName }
-                        classworlds.appLocationEnvVariableName { project.extension.classworlds.appLocationEnvVariableName }
+                        if (project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME).appLocationEnvVariableName) {
+                                conventionMapping.appLocationEnvVariableName = {
+                                        project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME).appLocationEnvVariableName
+                                }
+                        }
+
+                        if (project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME).assemblyFileName) {
+                                conventionMapping.assemblyFileName = {
+                                        project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME).assemblyFileName
+                                }
+                        }                        
                 }
         }
 }

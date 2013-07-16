@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-    
-    apply from: file('gradle/buildscript.gradle'), to: buildscript 
+        repositories {
+                mavenCentral()
+        }
+
+        apply from: file('gradle/buildscript.gradle'), to: buildscript
 }
 
 allprojects {
-    repositories { 
-        mavenCentral()
-    }
+        repositories {
+                mavenCentral()
+        }
 }
 
 apply plugin: 'java'
@@ -45,7 +45,11 @@ dependencies {
         compile gradleApi()
         compile 'org.codehaus.plexus:plexus-classworlds:2.4.2'
 
-        testCompile 'junit:junit:4.11'
+        testCompile ('org.spockframework:spock-core:0.6-groovy-1.8') {
+                exclude module: "junit-dep"
+                exclude module: "groovy-all"
+        }
+
 }
 
 task wrapper(type: Wrapper, description: 'Generates the Gradle wrapper.') {
