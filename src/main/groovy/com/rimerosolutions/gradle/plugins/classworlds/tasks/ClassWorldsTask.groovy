@@ -15,7 +15,6 @@
  */
 package com.rimerosolutions.gradle.plugins.classworlds.tasks
 
-import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginExtension
 import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
 
 import org.gradle.api.artifacts.ModuleVersionIdentifier
@@ -81,7 +80,6 @@ class ClassWorldsTask extends DefaultTask {
 
                 // Set input/output values
                 def classWorldsClosure = project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME)
-
                 appMainClassName = classWorldsClosure.appMainClassName
                 assemblyFileName = classWorldsClosure.assemblyFileName
                 jvmOptions = classWorldsClosure.jvmOptions
@@ -137,14 +135,14 @@ class ClassWorldsTask extends DefaultTask {
                 }
         }
 
-        protected makeStagingDirectories(File[] dirs) {
+        protected void makeStagingDirectories(File[] dirs) {
                 logger.info 'Creating staging directory layout'
                 dirs.each { File dir ->
                         ant.mkdir(dir: dir)
                 }
         }
 
-        protected copyApplicationDependenciesToLibDir(Collection allArtifacts, File libDir) {
+        protected void copyApplicationDependenciesToLibDir(Collection allArtifacts, File libDir) {
                 logger.info 'Copying all artifacts to lib folder.'
 
                 project.copy  {
@@ -155,7 +153,7 @@ class ClassWorldsTask extends DefaultTask {
                 }
         }
 
-        protected copyClassWorldsJarToBootDir(File bootJarArtifact, File bootDir) {
+        protected void copyClassWorldsJarToBootDir(File bootJarArtifact, File bootDir) {
                 logger.info 'Copying classworlds bootstrap jar to boot folder.'
 
                 project.copy {
@@ -164,7 +162,7 @@ class ClassWorldsTask extends DefaultTask {
                 }
         }
 
-        protected generateArchiveAssemblies(File stagingDir) {
+        protected void generateArchiveAssemblies(File stagingDir) {
                 logger.info 'Creating archive assemblies.'
 
                 for (String fileFormat in assemblyFormats) {
@@ -192,17 +190,17 @@ class ClassWorldsTask extends DefaultTask {
                 }
         }
 
-        protected cleanupStagingArea(File stagingDir) {
+        protected void cleanupStagingArea(File stagingDir) {
                 ant.delete(dir:stagingDir, includeEmptyDirs:true, verbose: true, failonerror: false, quiet:true)
         }
 
-        protected generateLauncherScripts(File binDir, String bootJarFileName, String appHome) {
+        protected void generateLauncherScripts(File binDir, String bootJarFileName, String appHome) {
                 logger.info 'Generating launchers scripts.'
 
-                ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_FILENAMES.eachWithIndex { launcherName, listIndex ->
-                        String launcherFilename = ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_FILENAMES_MAPPING[listIndex]
+                ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_TEMPLATES_FILENAMES.eachWithIndex { launcherName, listIndex ->
+                        String launcherFilename = ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_TEMPLATES_FILENAMES_MAPPING[listIndex]
                         File launcherFile = new File(binDir.absolutePath, launcherFilename)
-                        String shellComment = ClassWorldsPluginConstants.ScriptConstants.SHELL_COMMENTS[listIndex]
+                        String shellComment = ClassWorldsPluginConstants.ScriptConstants.BRANDING_COMMENTS[listIndex]
                         String shellHeader = ClassWorldsPluginConstants.ScriptConstants.SHELL_HEADERS[listIndex]
                         def scriptBinding = [appHome:appHome,
                                              bootJarFileName:bootJarFileName,
@@ -218,11 +216,10 @@ class ClassWorldsTask extends DefaultTask {
 
                                 template.make(scriptBinding).writeTo(w)
                         }
-
                 }
         }
 
-        protected generateLauncherConfigurationFile(File cfgDir, String mainClassName, Collection libs) {
+        protected void generateLauncherConfigurationFile(File cfgDir, String mainClassName, Collection libs) {
                 def launcherConfigurationTemplateLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/classworlds-template.txt"
                 def launcherConfigurationOutputFile = new File(cfgDir.absolutePath, 'classworlds.conf')
                 def filteredLibs = libs.findAll {

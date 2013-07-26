@@ -49,7 +49,6 @@ dependencies {
                 exclude module: "junit-dep"
                 exclude module: "groovy-all"
         }
-
 }
 
 task wrapper(type: Wrapper, description: 'Generates the Gradle wrapper.') {

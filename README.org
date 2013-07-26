@@ -2,9 +2,13 @@
 
 * Summary
 
-The Gradle ClassWorlds Assembly Plugin is a simple [[http://www.gradle.org/][Gradle]] plugin that generates a simple zipped distribution of your project, using [[http://classworlds.codehaus.org/launchusage.html][Classworlds]] as application launcher.
+The Gradle ClassWorlds Assembly Plugin is a simple [[http://www.gradle.org/][Gradle]] plugin that generates a simple archived distribution of your project, using [[http://classworlds.codehaus.org/launchusage.html][Classworlds]] as application launcher.
 
-Extract the archive and it's ready to go! This plugin is an alternative to the [[http://www.gradle.org/docs/current/userguide/application_plugin.html][Gradle application plugin]].
+Extract the archive(s) and it's ready to go! 
+
+This plugin is an alternative to the [[http://www.gradle.org/docs/current/userguide/application_plugin.html][Gradle application plugin]]. 
+
+In terms of transparency, launching and assembly capabilities, you can perform arbitrary actions with the staging directory via a configuration closure.
 
 Sometimes it is easier to ship your application as a simple *zip* or *tar* archive instead of bothering with a sophisticated software installer.
 
@@ -37,7 +41,9 @@ Clone the project from GitHub and run =gradlew install=, to install the plugin i
 
 ** Integration setup
 
-The first step consists into configuring the =buildscript= closure at the top of your Gradle build file. Then you can apply the =classworlds= plugin.
+The first step consists into configuring the =buildscript= closure at the top of your Gradle build file. 
+
+After that, you can apply the =classworlds= plugin.
 
  : buildscript {
  :   repositories {
@@ -65,7 +71,7 @@ Configuration parameters are to be specified inside a =classworlds= block in you
 :   appLocationEnvVariableName='APP_HOME_IF_YOU_NEED_IT'
 :   assemblyFileName="application_default_is_project_name_and_version"
 :   assemblyFormats = ['zip', 'tar'] // only zip by default
-:   jvmOptions = '-Xms512m -Xmx1g'
+:   jvmOptions = '-Xms512m -Xmx1g' // default is -Xmx128m -Xmx512m
 :
 :   doWithStagingDir = { stagingFolder ->
 :     println 'Customizations, other actions here if needed'
@@ -89,7 +95,8 @@ Unzip the generated zip assembly which is inside your build folder to the locati
 ** MS Windows
 : APPLICATION_LOCATION/bin/run.bat
 
-* Possible enhancements
+* Future enhancements
  - Better use of Gradle inputs and outputs, still doing few manual values assignments.
- - Add classpath customizations to prepend folders/files to the classpath
- - Write more tests
+ - Add classpath customizations to prepend folders/files to the classpath.
+ - Avoid marking all files as executable when creating the archive(s).
+ - Write more tests.
