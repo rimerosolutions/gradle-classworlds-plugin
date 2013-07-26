@@ -26,7 +26,7 @@ Simplicity is exactly what this Gradle plugin provides:
  - You have an application that is launched via a main class.
  - Your application has a set of dependencies.
  - Launching the application is just a matter of having all the dependencies in the classpath and running the main method of your application entry point.
- - Create and archive and ship it!
+ - Compress files into an archive and ship it!
 
 * Installation and configuration
 
@@ -63,8 +63,8 @@ Configuration parameters are to be specified inside a =classworlds= block in you
 :
 :   // optional inputs
 :   appLocationEnvVariableName='APP_HOME_IF_YOU_NEED_IT'
-:   assemblyFileName="application"
-:   assemblyFormats = ['zip', 'tar']
+:   assemblyFileName="application_default_is_project_name_and_version"
+:   assemblyFormats = ['zip', 'tar'] // only zip by default
 :   jvmOptions = '-Xms512m -Xmx1g'
 :
 :   doWithStagingDir = { stagingFolder ->
@@ -83,20 +83,13 @@ Running the =classworlds= task will also trigger the =build= task to generate th
 * Testing the generated distribution
 Unzip the generated zip assembly which is inside your build folder to the location of your choice.
 
-You must first set an environment variable matching the =appLocationEnvVariableName= parameter specified in your Gradle build file.
-
-For the instructions below, we'll suppose that =appLocationEnvVariableName= is set to =YOUR_APPLICATION_ENVIRONMENT_VARIABLE=.
-
 ** Unix/Linux (bash)
-: export YOUR_APPLICATION_ENVIRONMENT_VARIABLE=SOME_FOLDER_LOCATION
-: sh ${YOUR_APPLICATION_ENVIRONMENT_VARIABLE}/bin/run.sh
-
-Use =setenv= instead of =export= if you're using =csh= or =tcsh= as UNIX/Linux shell.
+: APPLICATION_LOCATION/bin/run.sh
 
 ** MS Windows
-: set YOUR_APPLICATION_ENVIRONMENT_VARIABLE=SOME_FOLDER_LOCATION
-: %YOUR_APPLICATION_ENVIRONMENT_VARIABLE%/bin/run.bat
+: APPLICATION_LOCATION/bin/run.bat
 
 * Possible enhancements
  - Better use of Gradle inputs and outputs, still doing few manual values assignments.
+ - Add classpath customizations to prepend folders/files to the classpath
  - Write more tests
