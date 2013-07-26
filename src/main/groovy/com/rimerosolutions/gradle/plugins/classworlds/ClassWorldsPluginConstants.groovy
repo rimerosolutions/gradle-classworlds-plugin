@@ -37,6 +37,9 @@ final class ClassWorldsPluginConstants {
         /** Launcher templates classpath location */
         static final String TEMPLATES_LOCATION = 'com/rimerosolutions/gradle/plugins/classworlds/templates'
 
+        /** Default JVM options */
+        static final String DEFAULT_JVM_OPTIONS = '-Xms128m -Xmx512m'
+
         enum AssemblyFormats {
                 ZIP, TAR
         }

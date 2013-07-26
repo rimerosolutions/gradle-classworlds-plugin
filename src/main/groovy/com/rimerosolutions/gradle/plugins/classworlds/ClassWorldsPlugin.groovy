@@ -50,7 +50,7 @@ class ClassWorldsPlugin implements Plugin<Project> {
                                 conventionMapping.assemblyFileName = {
                                         project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME).assemblyFileName
                                 }
-                        }                        
+                        }
                 }
         }
 }

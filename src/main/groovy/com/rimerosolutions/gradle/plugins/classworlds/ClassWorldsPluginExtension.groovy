@@ -15,8 +15,6 @@
  */
 package com.rimerosolutions.gradle.plugins.classworlds
 
-import org.gradle.api.Project
-
 /**
  * ClassWorlds Plugin extension.
  *
@@ -27,11 +25,11 @@ class ClassWorldsPluginExtension {
         String appLocationEnvVariableName
         String appMainClassName
         String assemblyFileName
+        String jvmOptions
         File assemblyDirectory
-        List<ClassWorldsPluginConstants.AssemblyFormats> assemblyFormats = []        
+        List<String> assemblyFormats = []        
 
         def doWithStagingDir(File stagingFolder, Closure closure) {
-                closure.delegate = this
                 closure(stagingFolder)
         }
 }

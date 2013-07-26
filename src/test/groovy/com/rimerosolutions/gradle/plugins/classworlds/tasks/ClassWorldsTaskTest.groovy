@@ -25,23 +25,24 @@ import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 
 /**
- * Basic spock test for the <code>ClassWorlds</code> task
+ * Basic spock test for the <code>ClassWorlds</code> task, work left.
  *
  * @author Yves Zoundi
  */
 class ClassWorldsTaskTest extends Specification {
-        Project project = ProjectBuilder.builder().build()
+        private static final List<String> KNOWN_INPUT_NAMES = ['appLocationEnvVariableName', 'appMainClassName', 'assemblyFileName', 'assemblyFormats']        
+        private final Project project = ProjectBuilder.builder().build()
 
         def setup() {
                 project.apply(plugin: ClassWorldsPlugin)
         }
         
-        def "Extensions are installed"() {
+        def 'extensionsAreInstalled'() {
                 expect:
                         project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME) instanceof ClassWorldsPluginExtension
         }
 
-        void "Classworlds task registered correctly"() {
+        void 'classworldsTaskRegisteredCorrectly'() {
                 when:
                         def classworldsTasks = project.getTasksByName(ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_NAME, false)
 
@@ -50,13 +51,14 @@ class ClassWorldsTaskTest extends Specification {
                         classworldsTasks.iterator().next() instanceof ClassWorldsTask
         }
 
-        void "Classworlds task inputs registered correctly"() {
+        void 'classworldsTaskInputsRegisteredCorrectly'() {
                 when:
                         def classworldsTasks = project.getTasksByName(ClassWorldsPluginConstants.TaskSettings.CLASSWORLDS_TASK_NAME, false)
-
-                then: 
                         ClassWorldsTask task = classworldsTasks.iterator().next()
-                        task.inputs.properties.keySet().containsAll(['appLocationEnvVariableName', 'appMainClassName', 'assemblyFileName', 'assemblyFormats'])
+                        
+
+                then:                         
+                        task.inputs.properties.keySet().containsAll(KNOWN_INPUT_NAMES)
         }
 
 
