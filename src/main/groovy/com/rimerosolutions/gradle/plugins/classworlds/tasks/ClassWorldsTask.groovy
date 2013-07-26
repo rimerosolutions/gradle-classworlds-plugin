@@ -186,7 +186,7 @@ class ClassWorldsTask extends DefaultTask {
                                 }
                         }
                         else if (f == ClassWorldsPluginConstants.AssemblyFormats.TAR) {
-                                ant.tar(destfile: assemblyFile, compression: 'gzip' ) {
+                                ant.tar(destfile: assemblyFile, compression: 'none' ) {
                                         tarfileset(dir:stagingDir, prefix:assemblyFileName)
                                 }
                         }
