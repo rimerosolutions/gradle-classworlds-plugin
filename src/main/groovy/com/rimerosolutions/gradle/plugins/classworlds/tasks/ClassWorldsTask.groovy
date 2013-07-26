@@ -66,6 +66,7 @@ class ClassWorldsTask extends DefaultTask {
                 // Combine all the libraries dependencies into one list
                 def allDeps = compileDeps + runtimeDeps + archiveDeps
 
+                // Set staging dir folders
                 def stagingDir = new File(project.buildDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.STAGING)
                 def bootDir    = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BOOT)
                 def libDir     = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.LIB)
@@ -73,87 +74,38 @@ class ClassWorldsTask extends DefaultTask {
                 def binDir     = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BIN)
 
                 // Create assembly directory layout
-                logger.info 'Creating standard folder structure'
-
-                ant.mkdir(dir:stagingDir)
-                ant.mkdir(dir:etcDir)
-                ant.mkdir(dir:binDir)
-                ant.mkdir(dir:bootDir)
-                ant.mkdir(dir:libDir)
+                makeStagingDirectories(stagingDir, etcDir, binDir, bootDir, libDir)
 
                 // Locate the classworlds dependency jar file from the buildscript classpath
-                ResolvedArtifact classworldsJarArtifact = project.buildscript.configurations.classpath.resolvedConfiguration.resolvedArtifacts.find { it ->
-                        ModuleVersionIdentifier mvi = it.moduleVersion.id
+                ResolvedArtifact classworldsJarArtifact = findBootstrapJarArtifact()
 
-                        (mvi.group == ClassWorldsPluginConstants.CLASSWORLDS_GROUP_ID &&
-                         mvi.name == ClassWorldsPluginConstants.CLASSWORLDS_ARTIFACT_ID &&
-                         it.type == ClassWorldsPluginConstants.CLASSWORLDS_ARTIFACT_TYPE)
-                }
-
-                // Validate the plugin configuration
+                // Set input/output values
                 def classWorldsClosure = project.extensions.getByName(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME)
-                validatePluginConfiguration(classWorldsClosure)
 
                 appMainClassName = classWorldsClosure.appMainClassName
                 assemblyFileName = classWorldsClosure.assemblyFileName
                 jvmOptions = classWorldsClosure.jvmOptions
                 assemblyFormats = classWorldsClosure.assemblyFormats
                 appLocationEnvVariableName = classWorldsClosure.appLocationEnvVariableName
+                
+                fallBackToDefaultInputValuesAsNeeded()
 
+                // Default actions
                 copyApplicationDependenciesToLibDir(allDeps, libDir)
                 copyClassWorldsJarToBootDir(classworldsJarArtifact.file, bootDir)
                 generateLauncherConfigurationFile(etcDir, appMainClassName, allDeps)
                 generateLauncherScripts(binDir, classworldsJarArtifact.file.name, appLocationEnvVariableName)
 
+                // Staging dir closure for general tasks prior to assembly generation
                 if (classWorldsClosure.doWithStagingDir) {
                         classWorldsClosure.doWithStagingDir(stagingDir)
                 }
 
-                generateAssemblyZip(stagingDir)
+                generateArchiveAssemblies(stagingDir)
                 cleanupStagingArea(stagingDir)
         }
 
-        private validatePluginConfiguration(ClassWorldsPluginExtension classworldsClosure) {
-                logger.info 'Validating ClassWorlds configuration'
-
-                if (!classworldsClosure.appLocationEnvVariableName) {
-                        StringBuilder sb = new StringBuilder(256)
-
-                        sb.append('The property \"appLocationEnvVariableName\" is missing or empty from the \"classworlds\" block in the Gradle build file.\n')
-                        sb.append('\"appLocationEnvVariableName\" should be assigned to the expected environment variable used to locate your app folder.\n')
-
-                        throw new InvalidUserDataException(sb.append(configurationBlockExample()).toString())
-                }
-
-                if (!classworldsClosure.appMainClassName) {
-                        StringBuilder sb = new StringBuilder(256)
-
-                        sb.append('The property \"appMainClassName\" is missing or empty from the \"classworlds\" block in the Gradle build file.\n')
-                        sb.append('\"appMainClassName\" should be assigned to the main class of the generated launcher.\n')
-
-                        throw new InvalidUserDataException(sb.append(configurationBlockExample()).toString())
-                }
-        }
-
-        private copyApplicationDependenciesToLibDir(Collection libFiles, File libDir) {
-                project.copy  {
-                        from libFiles
-                        into libDir
-                }
-        }
-
-        private copyClassWorldsJarToBootDir(File bootJarArtifact, File bootDir) {
-                logger.info 'Copying dependencies to project folder'
-
-                project.copy {
-                        from bootJarArtifact
-                        into bootDir
-                }
-        }
-
-        private generateAssemblyZip(File stagingDir) {
-                logger.info 'Creating zip assembly'
-
+        protected void fallBackToDefaultInputValuesAsNeeded() {
                 if(!assemblyFileName) {
                         assemblyFileName = "${project.name}-${project.version}"
                 }
@@ -167,6 +119,53 @@ class ClassWorldsTask extends DefaultTask {
                                 ClassWorldsPluginConstants.AssemblyFormats.ZIP.name()
                         ]
                 }
+
+                if (!jvmOptions) {
+                        jvmOptions = ClassWorldsPluginConstants.DEFAULT_JVM_OPTIONS
+                }
+        }
+
+        protected ResolvedArtifact findBootstrapJarArtifact() {
+                def resolvedArtifacts = project.buildscript.configurations.classpath.resolvedConfiguration.resolvedArtifacts
+
+                resolvedArtifacts.find { resolvedDependency ->
+                        ModuleVersionIdentifier moduleVersionIdentifier = resolvedDependency.moduleVersion.id
+
+                        (moduleVersionIdentifier.group == ClassWorldsPluginConstants.CLASSWORLDS_GROUP_ID &&
+                         moduleVersionIdentifier.name == ClassWorldsPluginConstants.CLASSWORLDS_ARTIFACT_ID &&
+                         resolvedDependency.type == ClassWorldsPluginConstants.CLASSWORLDS_ARTIFACT_TYPE)
+                }
+        }
+
+        protected makeStagingDirectories(File[] dirs) {
+                logger.info 'Creating staging directory layout'
+                dirs.each { File dir ->
+                        ant.mkdir(dir: dir)
+                }
+        }
+
+        protected copyApplicationDependenciesToLibDir(Collection allArtifacts, File libDir) {
+                logger.info 'Copying all artifacts to lib folder.'
+
+                project.copy  {
+                        from allArtifacts
+                        into libDir
+                        include ClassWorldsPluginConstants.Archives.WILDCARD_JAR
+                        include ClassWorldsPluginConstants.Archives.WILDCARD_ZIP
+                }
+        }
+
+        protected copyClassWorldsJarToBootDir(File bootJarArtifact, File bootDir) {
+                logger.info 'Copying classworlds bootstrap jar to boot folder.'
+
+                project.copy {
+                        from bootJarArtifact
+                        into bootDir
+                }
+        }
+
+        protected generateArchiveAssemblies(File stagingDir) {
+                logger.info 'Creating archive assemblies.'
 
                 for (String fileFormat in assemblyFormats) {
                         ClassWorldsPluginConstants.AssemblyFormats f = null
@@ -182,67 +181,62 @@ class ClassWorldsTask extends DefaultTask {
 
                         if (f == ClassWorldsPluginConstants.AssemblyFormats.ZIP) {
                                 ant.zip(destfile: assemblyFile) {
-                                        zipfileset(dir:stagingDir, prefix:assemblyFileName)
+                                        zipfileset(dir:stagingDir, prefix:assemblyFileName, filemode:'755')
                                 }
                         }
                         else if (f == ClassWorldsPluginConstants.AssemblyFormats.TAR) {
-                                ant.tar(destfile: assemblyFile, compression: 'none' ) {
-                                        tarfileset(dir:stagingDir, prefix:assemblyFileName)
+                                ant.tar(destfile: assemblyFile) {
+                                        tarfileset(dir:stagingDir, prefix:assemblyFileName, filemode:'755')
                                 }
                         }
                 }
         }
 
-        private cleanupStagingArea(File stagingDir) {
+        protected cleanupStagingArea(File stagingDir) {
                 ant.delete(dir:stagingDir, includeEmptyDirs:true, verbose: true, failonerror: false, quiet:true)
         }
 
-        private static String configurationBlockExample() {
-                '\nSample configuration:\n\nclassworlds {\n\tappMainClassName=\"com.Main\"\n\tappLocationEnvVariableName=\"application_home\"\n}'
-        }
+        protected generateLauncherScripts(File binDir, String bootJarFileName, String appHome) {
+                logger.info 'Generating launchers scripts.'
 
-        private generateLauncherScripts(File binDir, String bootJarFileName, String appHome) {
-                logger.info 'Generating launchers scripts'
-
-                if (!jvmOptions) {
-                        jvmOptions = ClassWorldsPluginConstants.DEFAULT_JVM_OPTIONS 
-                }
-
-                def shellHeaders = ['#!/usr/bin/env bash', '']
-                def shellComments = ['#Generated by Gradle ClassWorlds Plugin', '@REM Generated by Gradle ClassWorlds Plugin']
-                def launcherFileNames = ['launcher_unix.txt', 'launcher_windows.txt']
-                def launcherFileNamesMapping = ['run.sh', 'run.bat']
-
-                launcherFileNames.eachWithIndex { launcherName, listIndex ->
-                        def launcherFile = new File(binDir.absolutePath, launcherFileNamesMapping[listIndex])
-                        def shellComment = shellComments[listIndex]
-                        def shellHeader = shellHeaders[listIndex]
-                        def tplModel = [appHome:appHome, bootJarFileName:bootJarFileName, shellHeader:shellHeader, shellComment:shellComment, jvmOptions:jvmOptions]
+                ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_FILENAMES.eachWithIndex { launcherName, listIndex ->
+                        String launcherFilename = ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_FILENAMES_MAPPING[listIndex]
+                        File launcherFile = new File(binDir.absolutePath, launcherFilename)
+                        String shellComment = ClassWorldsPluginConstants.ScriptConstants.SHELL_COMMENTS[listIndex]
+                        String shellHeader = ClassWorldsPluginConstants.ScriptConstants.SHELL_HEADERS[listIndex]
+                        def scriptBinding = [appHome:appHome,
+                                             bootJarFileName:bootJarFileName,
+                                             shellHeader:shellHeader,
+                                             shellComment:shellComment,
+                                             jvmOptions:jvmOptions]
 
                         launcherFile.withWriter { w ->
-                                def engine = new groovy.text.GStringTemplateEngine()
-                                def tplLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/${launcherName}"
-                                def templateUrl = Thread.currentThread().contextClassLoader.getResource(tplLocation)
-                                def template = engine.createTemplate(templateUrl)
+                                def templateEngine = new groovy.text.GStringTemplateEngine()
+                                def templateLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/${launcherName}"
+                                def templateUrl = Thread.currentThread().contextClassLoader.getResource(templateLocation)
+                                def template = templateEngine.createTemplate(templateUrl)
 
-                                template.make(tplModel).writeTo(w)
+                                template.make(scriptBinding).writeTo(w)
                         }
 
-                        launcherFile.setExecutable(true)
                 }
         }
 
-        private generateLauncherConfigurationFile(File cfgDir, String mainClassName, Collection libs) {
-                def tplLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/classworlds-template.txt"
-                def launcherCfgFile = new File(cfgDir.absolutePath, 'classworlds.conf')
-                def tplModel = [libs:libs, mainClassName:mainClassName]
+        protected generateLauncherConfigurationFile(File cfgDir, String mainClassName, Collection libs) {
+                def launcherConfigurationTemplateLocation = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/classworlds-template.txt"
+                def launcherConfigurationOutputFile = new File(cfgDir.absolutePath, 'classworlds.conf')
+                def filteredLibs = libs.findAll {
+                        it.name.toLowerCase().endsWith(ClassWorldsPluginConstants.Archives.EXTENSION_ZIP) ||
+                        it.name.toLowerCase().endsWith(ClassWorldsPluginConstants.Archives.EXTENSION_JAR)
+                }
+                def launcherConfigurationBinding = [libs:filteredLibs, mainClassName:mainClassName]
 
-                launcherCfgFile.withWriter { w ->
-                        def engine = new groovy.text.GStringTemplateEngine()
-                        def templateUrl = Thread.currentThread().contextClassLoader.getResource(tplLocation)
-                        def template = engine.createTemplate(templateUrl)
+                launcherConfigurationOutputFile.withWriter { w ->
+                        def templateEngine = new groovy.text.GStringTemplateEngine()
+                        def templateUrl = Thread.currentThread().contextClassLoader.getResource(launcherConfigurationTemplateLocation)
+                        def template = templateEngine.createTemplate(templateUrl)
 
-                        template.make(tplModel).writeTo(w)
+                        template.make(launcherConfigurationBinding).writeTo(w)
                 }
         }
 
