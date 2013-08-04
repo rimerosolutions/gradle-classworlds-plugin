@@ -30,9 +30,9 @@ import spock.lang.Specification
  */
 abstract class ClassWorldsTaskSpec extends Specification {
 
-        Project project
-        final String tmpFolder = System.properties['java.io.tmpdir']
-        final String projectPath = tmpFolder + File.separator + ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME
+        protected Project project
+        private final String tmpFolder = System.properties['java.io.tmpdir']
+        protected final String projectPath = tmpFolder + File.separator + ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME
 
         def setup() {
                 project = ProjectBuilder.builder().withProjectDir(new File(projectPath)).build()
@@ -47,7 +47,7 @@ abstract class ClassWorldsTaskSpec extends Specification {
         }
 
         def 'When inputs are missing an exception should be thrown'() {
-                given: 'The task is configured with no inputs'
+                given: 'The task is registered with no inputs'
                 def task = project.task(taskName, type: taskClass)
 
                 when: 'The task is executed'

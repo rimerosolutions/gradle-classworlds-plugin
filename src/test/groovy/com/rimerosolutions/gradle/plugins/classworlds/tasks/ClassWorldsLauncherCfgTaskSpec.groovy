@@ -54,7 +54,7 @@ class ClassWorldsLauncherCfgTaskSpec extends ClassWorldsTaskSpec {
                 then: 'When the task is executed'
                 project.tasks[ClassWorldsLauncherCfgTask.TASK_NAME].execute() 
                 
-                expect: 'The classworlds configuration file should be present'
+                expect: 'The classworlds configuration file should be present in the etc folder'
                 new File("$cfgDirectory/${ClassWorldsLauncherCfgTask.CONFIGURATION_FILENAME}").exists()
         }
 }
