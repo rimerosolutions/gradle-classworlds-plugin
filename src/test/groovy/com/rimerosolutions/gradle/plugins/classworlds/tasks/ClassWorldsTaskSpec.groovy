@@ -24,7 +24,7 @@ import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
 import spock.lang.Specification
 
 /**
- * Spock test for the <code>classWorldsAssemblies</code> task.
+ * Root test specification for Classworlds tasks.
  * 
  * @author Yves Zoundi
  */

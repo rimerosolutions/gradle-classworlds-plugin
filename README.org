@@ -36,7 +36,7 @@ Simplicity is exactly what this Gradle plugin provides:
 
 * Installation and configuration
  - *Note*: This plugin is now available on a [[https://oss.sonatype.org/content/repositories/snapshots][hosted Maven repository]]!
- - Requirements: Gradle 1.6+ and JDK 1.6+
+ - *Requirements*: Gradle 1.6+ and JDK 1.6+
 
 ** Installation to your local Maven cache
 
