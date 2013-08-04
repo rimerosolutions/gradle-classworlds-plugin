@@ -87,7 +87,6 @@ class ClassWorldsPlugin implements Plugin<Project> {
                                 appHome = ext.appHome
                                 scriptsDir = new File("${ext.stagingDir}/${ClassWorldsPluginConstants.AssemblyDirNames.BIN}")
                                 jvmOptions = ext.jvmOptions
-
                         }
 
                         task(type: ClassWorldsLauncherCfgTask, ClassWorldsLauncherCfgTask.TASK_NAME, dependsOn: ClassWorldsLauncherScriptsTask.TASK_NAME) {

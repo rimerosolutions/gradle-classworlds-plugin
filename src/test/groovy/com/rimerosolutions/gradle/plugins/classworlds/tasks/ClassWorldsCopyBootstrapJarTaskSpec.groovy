@@ -44,7 +44,7 @@ class ClassWorldsCopyBootstrapJarTaskSpec extends ClassWorldsTaskSpec {
                 }
         }        
 
-        def 'With a stagingDir configured, the task should run fine'() {
+        def 'With all inputs configured, the task should run fine'() {
                 setup: 'With basic settings'
                 def stagingDirectory = project.extensions[ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME].stagingDir
                 File bootDirectory = new File("$stagingDirectory/${ClassWorldsPluginConstants.AssemblyDirNames.BOOT}")
@@ -57,7 +57,7 @@ class ClassWorldsCopyBootstrapJarTaskSpec extends ClassWorldsTaskSpec {
                 when: 'The task is registered'
                 project.tasks.create(name:BOOTSTRAP_TASK_NAME, type:MockableClassWorldsCopyBootstrapJarTask)
 
-                and: 'The task is configured'
+                and: 'The task is configured with required inputs'
                 project.tasks[BOOTSTRAP_TASK_NAME].with {
                         bootDir = bootDirectory
                         bootJar = bootJarFile

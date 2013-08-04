@@ -34,7 +34,7 @@ class ClassWorldsCopyDependenciesTaskSpec extends ClassWorldsTaskSpec {
                 ClassWorldsCopyDependenciesTask.TASK_NAME
         }
 
-        def 'With a stagingDir configured, the task should run fine'() {
+        def 'With all the inputs configured, the task should run fine'() {
                 setup: 'The lib dir is set'                
                 def stagingDirectory = project.extensions[ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME].stagingDir
                 File libDirectory = new File("$stagingDirectory/${ClassWorldsPluginConstants.AssemblyDirNames.LIB}")
@@ -47,7 +47,7 @@ class ClassWorldsCopyDependenciesTaskSpec extends ClassWorldsTaskSpec {
                 and: 'The task is registered'
                 project.tasks.create(name:ClassWorldsCopyDependenciesTask.TASK_NAME, type:ClassWorldsCopyDependenciesTask)
 
-                and: 'The task is configured'
+                and: 'The task is configured with artifacts and the lib folder'
                 project.tasks[ClassWorldsCopyDependenciesTask.TASK_NAME].with {
                         libDir = libDirectory
                         allArtifacts = project.files(libJar)

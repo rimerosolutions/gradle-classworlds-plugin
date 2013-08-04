@@ -24,7 +24,7 @@ import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
  */
 class ClassWorldsAssemblyTaskSpec extends ClassWorldsTaskSpec {
 
-        def 'With a stagingDir configured, the task should run fine'() {
+        def 'With all the required inputs configured, the task should run fine'() {
                 given: 'The staging dir is set'
                 File stagingDirectory = project.extensions[ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME].stagingDir
                 stagingDirectory.mkdirs()

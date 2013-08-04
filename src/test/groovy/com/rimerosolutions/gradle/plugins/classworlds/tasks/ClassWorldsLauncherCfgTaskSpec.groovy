@@ -34,7 +34,7 @@ class ClassWorldsLauncherCfgTaskSpec extends ClassWorldsTaskSpec {
                 ClassWorldsLauncherCfgTask.TASK_NAME
         }
 
-        def 'With inputs configured, the task should run fine'() {
+        def 'With all inputs configured, the task should run fine'() {
                 given: 'The configuration dir is set'
                 def stagingDirectory = project.extensions[ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME].stagingDir
                 

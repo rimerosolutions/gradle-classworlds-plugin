@@ -34,7 +34,7 @@ class ClassWorldsLauncherScriptsTaskSpec extends ClassWorldsTaskSpec {
                 ClassWorldsLauncherScriptsTask.TASK_NAME
         }
 
-        def 'With inputs configured, the task should run fine'() {
+        def 'With all inputs configured, the task should run fine'() {
                 given: 'The configuration dir is set'
                 def stagingDirectory = project.extensions[ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME].stagingDir
                 project.ext[ClassWorldsCopyBootstrapJarTask.BOOTSTRAP_JAR_FILENAME_PROPERTY] = 'boot.jar'

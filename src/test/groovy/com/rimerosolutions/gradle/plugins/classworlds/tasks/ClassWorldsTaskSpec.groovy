@@ -58,11 +58,21 @@ abstract class ClassWorldsTaskSpec extends Specification {
         }
 
         def cleanup() {
+                // See http://issues.gradle.org/browse/GRADLE-2451
+                // There are still some remaining folders in java.io.tmpdir though...
+                // Looks like a test gradle user home folder always gets created
+                // but it is never deleted...
                 boolean deleted = new File(projectPath).deleteDir()
                 assert deleted
         }
-        
+
+        /**
+         * The task class for which inputs needs to be verified
+         */
         abstract Class getTaskClass()
-        
+
+        /**
+         * The task name to register when verifying missing inputs
+         */
         abstract String getTaskName()
 }
