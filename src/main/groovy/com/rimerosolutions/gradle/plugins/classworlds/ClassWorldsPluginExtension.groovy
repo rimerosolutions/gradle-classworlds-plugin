@@ -35,7 +35,7 @@ class ClassWorldsPluginExtension {
         String appMainClassName
         
         /**
-         * 
+         * The assembly file name
          */
         String assemblyFileName
         
@@ -68,7 +68,7 @@ class ClassWorldsPluginExtension {
                 stagingDir = stagingDir ?: new File(project.buildDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.STAGING)
                 assemblyFormats = assemblyFormats ?: [ClassWorldsPluginConstants.AssemblyFormats.ZIP.name()]
                 jvmOptions = jvmOptions ?: ClassWorldsPluginConstants.DEFAULT_JVM_OPTIONS
-                appHome = appHome ?: 'APP_HOME'
+                appHome = appHome ?: ClassWorldsPluginConstants.ScriptConstants.DEFAULT_APP_HOME_SYSPROPERTY
         }
 
         /**

@@ -57,7 +57,7 @@ class ClassWorldsLauncherScriptsTaskSpec extends ClassWorldsTaskSpec {
                 project.tasks[ClassWorldsLauncherScriptsTask.TASK_NAME].execute() 
                 
                 expect: 'The classworlds launcher scripts should be created in the bin directory'                
-                new File("$binDirectory/${ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_TEMPLATES_FILENAMES_MAPPING[0]}").exists()
-                new File("$binDirectory/${ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_TEMPLATES_FILENAMES_MAPPING[1]}").exists()
+                new File("$binDirectory/${ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_SCRIPT_FILENAME_WINDOWS}").exists()
+                new File("$binDirectory/${ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_SCRIPT_FILENAME_UNIX}").exists()
         }
 }

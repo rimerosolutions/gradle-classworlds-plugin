@@ -60,8 +60,17 @@ final class ClassWorldsPluginConstants {
                 /** Launcher template names. */
                 static final List<String> LAUNCHER_TEMPLATES_FILENAMES = ['launcher_unix.txt', 'launcher_windows.txt']
 
+                /** Windows launcher script filename. */
+                static final String LAUNCHER_SCRIPT_FILENAME_WINDOWS = 'run.bat'
+                
+                /** UNIX Launcher script filename. */
+                static final String LAUNCHER_SCRIPT_FILENAME_UNIX = 'run.sh'
+                
                 /** Launcher mapping file names from template names. */
-                static final List<String> LAUNCHER_TEMPLATES_FILENAMES_MAPPING = ['run.sh', 'run.bat']
+                static final List<String> LAUNCHER_TEMPLATES_FILENAMES_MAPPING = [LAUNCHER_SCRIPT_FILENAME_UNIX, LAUNCHER_SCRIPT_FILENAME_WINDOWS]
+                
+                /** Default Application home system property */
+                static final String DEFAULT_APP_HOME_SYSPROPERTY = 'APP_HOME'
         }
 
         /** Archives constants. */
@@ -98,7 +107,7 @@ final class ClassWorldsPluginConstants {
         }
 
         /** Assembly directory file names constants. */
-        static class AssemblyDirNames {
+        static final class AssemblyDirNames {
                 /** Staging directory name. */
                 static final String STAGING = 'classworlds'
 

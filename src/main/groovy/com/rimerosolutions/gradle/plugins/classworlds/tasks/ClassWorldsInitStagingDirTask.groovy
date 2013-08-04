@@ -46,10 +46,10 @@ class ClassWorldsInitStagingDirTask extends DefaultTask {
         @TaskAction generateStagingDirLayout() {
                 logger.info 'Creating staging directory layout'
                 
-                def bootDir    = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BOOT)
-                def libDir     = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.LIB)
-                def etcDir     = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.ETC)
-                def binDir     = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BIN)
+                def bootDir = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BOOT)
+                def libDir  = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.LIB)
+                def etcDir  = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.ETC)
+                def binDir  = new File(stagingDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.BIN)
                 
                 generateStagingDirectories(stagingDir, bootDir, libDir, etcDir, binDir)
         }
