@@ -29,12 +29,28 @@ import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
  */
 class ClassWorldsCopyBootstrapJarTask extends DefaultTask {
 
+        /**
+         * The task name.
+         */
         static final String TASK_NAME = 'classworldsCopyBootstrapJar'
+        
+        /**
+         * The task description.
+         */
         static final String TASK_DESCRIPTION = 'Copy ClassWorlds bootstrap jar.'
+        
+        /**
+         * Property holding the file name of the <code>plexus-classworlds</code> dependency.
+         */
         static final String BOOTSTRAP_JAR_FILENAME_PROPERTY = 'bootJarArtifactName'
 
         @InputDirectory File bootDir
 
+        /**
+         * Locates the <code>plexus-classworlds</code> dependency in the classpath.
+         * 
+         * @return The <code>plexus-classworlds</code> dependency jar file
+         */
         protected File findBootstrapJarArtifact() {
                 def configs = project.buildscript.configurations
                 def resolvedArtifacts = configs.classpath.resolvedConfiguration.resolvedArtifacts
@@ -48,6 +64,12 @@ class ClassWorldsCopyBootstrapJarTask extends DefaultTask {
                 }.file
         }
 
+        /**
+         * Copies the <code>plexus-classworlds</code> jar file to the boot directory.
+         * 
+         * @param bootJarArtifact The <code>plexus-classworlds</code> jar file
+         * @param bootDirectory The boot directory
+         */
         protected void copyClassWorldsJarToBootDir(File bootJarArtifact, File bootDirectory) {
                 project.copy {
                         from bootJarArtifact

@@ -27,10 +27,20 @@ import org.gradle.api.tasks.TaskAction
  * @author Yves Zoundi
  */
 class ClassWorldsInitStagingDirTask extends DefaultTask {
+        /**
+         * The task name.
+         */
         static final String TASK_NAME = 'classworldsInitStaginDir'
+        
+        /**
+         * The task description.
+         */
         static final String TASK_DESCRIPTION = 'Initialize staging directory layout.'
 
         @OutputDirectory
+        /**
+         * The staging folder.
+         */
         File stagingDir
 
         @TaskAction generateStagingDirLayout() {

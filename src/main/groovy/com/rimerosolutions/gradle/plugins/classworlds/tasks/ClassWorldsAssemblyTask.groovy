@@ -30,13 +30,28 @@ import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
  */
 class ClassWorldsAssemblyTask extends DefaultTask {
 
+        /**
+         * The task name.
+         */
         static final String TASK_NAME = 'classWorldsAssemblies'
+        
+        /**
+         * The task description.
+         */
         static final String TASK_DESCRIPTION = 'Generate ClassWorlds assemblies.'
 
         @InputDirectory
+        /**
+         * The staging area.
+         */
         File stagingDir
 
         @Input
+        /**
+         * The archive assembly formats.
+         * 
+         * @see ClassWorldsPluginConstants.AssemblyFormats
+         */
         List<String> assemblyFormats
 
         @Input
@@ -45,8 +60,8 @@ class ClassWorldsAssemblyTask extends DefaultTask {
         @TaskAction generateArchiveAssemblies() {
                 logger.info 'Creating archive assemblies.'
 
-                if (project.extensions.classworlds.hasProperty('doWithStagingDir')) {
-                        project.extensions.classworlds.doWithStagingDir(stagingDir)
+                if (project.extensions[ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME].hasProperty('doWithStagingDir')) {
+                        project.extensions[ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME].doWithStagingDir(stagingDir)
                 }
 
                 for (String fileFormat in assemblyFormats) {

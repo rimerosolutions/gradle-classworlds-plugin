@@ -15,33 +15,23 @@
  */
 package com.rimerosolutions.gradle.plugins.classworlds.tasks
 
-import java.io.File;
-
-import org.gradle.api.Project
-import org.gradle.api.file.FileCollection;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.InputDirectory;
-import org.gradle.api.tasks.TaskValidationException
-import org.gradle.testfixtures.ProjectBuilder
 import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
-import spock.lang.Specification
 
 /**
  * Spock test for the <code>classWorldsAssemblies</code> task.
  * 
  * @author Yves Zoundi
  */
-public class ClassWorldsLauncherCfgTaskSpec extends ClassWorldsTaskSpec {
+class ClassWorldsLauncherCfgTaskSpec extends ClassWorldsTaskSpec {
+        
+        @Override
+        Class getTaskClass() {
+                ClassWorldsLauncherCfgTask
+        }
 
-        def 'When inputs are missing an exception should be thrown'() {
-                given: 'The task is configured with no inputs'
-                def task = project.task(ClassWorldsLauncherCfgTask.TASK_NAME, type: ClassWorldsLauncherCfgTask)
-
-                when: 'The task is executed'
-                task.execute()
-
-                then: 'An TaskValidationException error should be thrown'
-                thrown(TaskValidationException)
+        @Override
+        String getTaskName() {
+                ClassWorldsLauncherCfgTask.TASK_NAME
         }
 
         def 'With inputs configured, the task should run fine'() {

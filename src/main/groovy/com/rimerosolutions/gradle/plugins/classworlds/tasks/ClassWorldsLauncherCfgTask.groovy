@@ -32,22 +32,46 @@ import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
  */
 class ClassWorldsLauncherCfgTask extends DefaultTask {
 
+        /**
+         * The launcher configuration file name.
+         */
         static final String CONFIGURATION_FILENAME = 'classworlds.conf'
+        
+        /**
+         * Classpath location of the launcher configuration template.
+         */
         static final String TEMPLATE_LOCATION = "${ClassWorldsPluginConstants.TEMPLATES_LOCATION}/classworlds-template.txt"
+        
+        /**
+         * The task name.
+         */
         static final String TASK_NAME = 'classWorldsLaunchersCfgTask'
+        
+        /**
+         * The task description
+         */
         static final String TASK_DESCRIPTION = 'Generate ClassWorlds launcher configuration.'
         
         @Input
+        /**
+         * The application main class name.
+         */
         String appMainClassName
 
         @InputDirectory
+        /**
+         * The application configurations folder.
+         */
         File cfgDir
         
         @Input
+        /**
+         * The dependencies artifact.
+         */
         FileCollection allArtifacts
 
         @TaskAction writeConfigurationFile() {
-                project.logger.info 'Generating ClassWorlds launcher configuration.'
+                logger.info 'Generating ClassWorlds launcher configuration.'
                 
                 File configurationFile = project.file("$cfgDir/$CONFIGURATION_FILENAME")
                 

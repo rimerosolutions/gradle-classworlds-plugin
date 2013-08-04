@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.rimerosolutions.gradle.plugins.classworlds.tasks;
-
-import org.gradle.api.Project
-import org.gradle.api.tasks.TaskValidationException
-import org.gradle.testfixtures.ProjectBuilder
+package com.rimerosolutions.gradle.plugins.classworlds.tasks
 
 import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
-
-import spock.lang.Specification
 
 /**
  * Spock test for the <code>classworldsInitStaginDir</code> task.
  * 
  * @author Yves Zoundi
  */
-public class ClassWorldsInitStagingDirTaskSpec extends ClassWorldsTaskSpec {
+class ClassWorldsInitStagingDirTaskSpec extends ClassWorldsTaskSpec {
+        
+        @Override
+        Class getTaskClass() {
+                ClassWorldsInitStagingDirTask
+        }
 
-        def 'When inputs are missing an exception should be thrown'() {
-                given: 'The task is configured with no inputs'
-                def task = project.task(ClassWorldsInitStagingDirTask.TASK_NAME, type: ClassWorldsInitStagingDirTask)
-
-                when: 'The task is executed'
-                task.execute()
-
-                then: 'An TaskValidationException error should be thrown'
-                thrown(TaskValidationException)
+        @Override
+        String getTaskName() {
+                ClassWorldsInitStagingDirTask.TASK_NAME
         }
 
         def 'With a stagingDir configured, the task should run fine'() {

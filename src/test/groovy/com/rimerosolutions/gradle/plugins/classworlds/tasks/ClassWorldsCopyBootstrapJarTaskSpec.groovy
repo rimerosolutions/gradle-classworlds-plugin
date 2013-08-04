@@ -15,21 +15,27 @@
  */
 package com.rimerosolutions.gradle.plugins.classworlds.tasks
 
-import java.io.File;
-
-import org.gradle.api.Project
-import org.gradle.api.tasks.TaskValidationException
-import org.gradle.testfixtures.ProjectBuilder
 import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
-import spock.lang.Specification
 
 /**
  * Spock test for the <code>classWorldsAssemblies</code> task.
  * 
  * @author Yves Zoundi
  */
-public class ClassWorldsCopyBootstrapJarTaskSpec extends ClassWorldsTaskSpec {
-         
+class ClassWorldsCopyBootstrapJarTaskSpec extends ClassWorldsTaskSpec {
+
+        @Override
+        Class getTaskClass() {
+                MockableClassWorldsCopyBootstrapJarTask
+        }
+
+        @Override
+        String getTaskName() {
+                BOOTSTRAP_TASK_NAME
+        }
+        
+        static final String BOOTSTRAP_TASK_NAME = 'bootJarTask'
+        
         static class MockableClassWorldsCopyBootstrapJarTask extends ClassWorldsCopyBootstrapJarTask {
                 File bootJar
                 
@@ -37,23 +43,11 @@ public class ClassWorldsCopyBootstrapJarTaskSpec extends ClassWorldsTaskSpec {
                          bootJar
                 }
         }        
-        
-        def 'When inputs are missing an exception should be thrown'() {
-                given: 'The task is configured with no inputs'
-                def task = project.task('bootJarTask', type: MockableClassWorldsCopyBootstrapJarTask)
-
-                when: 'The task is executed'
-                task.execute()
-
-                then: 'An TaskValidationException error should be thrown'
-                thrown(TaskValidationException)
-        }
 
         def 'With a stagingDir configured, the task should run fine'() {
                 setup: 'With basic settings'
                 def stagingDirectory = project.extensions[ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME].stagingDir
                 File bootDirectory = new File("$stagingDirectory/${ClassWorldsPluginConstants.AssemblyDirNames.BOOT}")
-                def bootstrapTaskName = 'bootJarTask'
                 
                 and: 'The boot dir is set along with the boot jar'
                 bootDirectory.mkdirs()
@@ -61,16 +55,16 @@ public class ClassWorldsCopyBootstrapJarTaskSpec extends ClassWorldsTaskSpec {
                 bootJarFile.createNewFile()
                                 
                 when: 'The task is registered'
-                project.tasks.create(name:bootstrapTaskName, type:MockableClassWorldsCopyBootstrapJarTask)
+                project.tasks.create(name:BOOTSTRAP_TASK_NAME, type:MockableClassWorldsCopyBootstrapJarTask)
 
                 and: 'The task is configured'
-                project.tasks[bootstrapTaskName].with {
+                project.tasks[BOOTSTRAP_TASK_NAME].with {
                         bootDir = bootDirectory
                         bootJar = bootJarFile
                 } 
 
                 then: 'When the task is executed'
-                project.tasks[bootstrapTaskName].execute() 
+                project.tasks[BOOTSTRAP_TASK_NAME].execute() 
                 
                 expect: 'The classworlds jar file should be present'
                 new File("$bootDirectory/${project.ext[ClassWorldsCopyBootstrapJarTask.BOOTSTRAP_JAR_FILENAME_PROPERTY]}").exists()

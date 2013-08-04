@@ -25,14 +25,24 @@ import org.gradle.api.tasks.TaskAction
  * @author Yves Zoundi
  */
 class ClassWorldsCleanupTask extends DefaultTask {
+        /**
+         * The task name.
+         */
         static final String TASK_NAME = 'classworldsCleanupStagingArea'
+        
+        /**
+         * The task description.
+         */
         static final String TASK_DESCRIPTION = 'Cleanup staging area.'
 
         @InputDirectory
+        /**
+         * The staging area.
+         */
         File stagingDir
 
         @TaskAction cleanupStagingArea() {
-                project.logger.info 'Deleting staging directory'
+                logger.info 'Deleting staging directory'
                 
                 ant.delete(dir:stagingDir, includeEmptyDirs:true, quiet:true)
         }

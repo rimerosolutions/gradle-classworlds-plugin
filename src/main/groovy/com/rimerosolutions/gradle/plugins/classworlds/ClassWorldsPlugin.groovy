@@ -19,7 +19,13 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.GradleBuild
 
-import com.rimerosolutions.gradle.plugins.classworlds.tasks.*
+import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorldsAssemblyTask
+import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorldsCleanupTask
+import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorldsCopyBootstrapJarTask
+import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorldsCopyDependenciesTask
+import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorldsInitStagingDirTask
+import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorldsLauncherCfgTask
+import com.rimerosolutions.gradle.plugins.classworlds.tasks.ClassWorldsLauncherScriptsTask 
 
 /**
  * ClassWorlds Plugin implementation that registers the <code>classworlds</code> task.
@@ -28,6 +34,9 @@ import com.rimerosolutions.gradle.plugins.classworlds.tasks.*
  */
 class ClassWorldsPlugin implements Plugin<Project> {
 
+        /**
+         * List of sub-tasks to run inside the main <code>classworlds</code> aggregate task.
+         */
         static final List<String> CLASSWORLDS_SUB_TASKS_NAMES = [ClassWorldsInitStagingDirTask.TASK_NAME,                                                                 
                                                                  ClassWorldsCopyBootstrapJarTask.TASK_NAME,                                                                 
                                                                  ClassWorldsLauncherScriptsTask.TASK_NAME,                                                                 

@@ -30,17 +30,29 @@ import org.gradle.api.tasks.TaskAction
  */
 class ClassWorldsCopyDependenciesTask extends DefaultTask {
 
+        /**
+         * The task name.
+         */
         static final String TASK_NAME = 'classworldsCopyDependencies'
+        
+        /**
+         * The task description.
+         */
         static final String TASK_DESCRIPTION = 'Copy application dependencies.'
 
         @OutputDirectory
+        /**
+         * The application <code>lib</code> folder containing all jar/zip files.
+         */
         File libDir
 
         @Input
+        /**
+         * All the application dependencies artifacts.
+         */
         FileCollection allArtifacts
 
-        @TaskAction
-        void copyApplicationDependenciesToLibDir() {
+        @TaskAction opyApplicationDependenciesToLibDir() {
                 logger.info 'Copying all artifacts to lib folder.'
 
                 project.copy  {

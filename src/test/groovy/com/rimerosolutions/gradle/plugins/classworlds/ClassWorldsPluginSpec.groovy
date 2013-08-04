@@ -34,7 +34,7 @@ class ClassWorldsPluginSpec extends Specification {
                 project.with {
                         apply plugin: 'classworlds'
                         apply plugin: 'java'
-                        version = "test.version"
+                        version = 'test.version'
                 }
         }
 
@@ -47,8 +47,12 @@ class ClassWorldsPluginSpec extends Specification {
                 when: 'The project is evaluated'
                 project.evaluate()
 
-                then: 'We should have the main task and its sub-tasks registered'
-                def tasks = project.tasks.findAll { it.name.toLowerCase().startsWith(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME) }
+                then: 'When we gather all the tasks with the classworlds prefix'
+                def tasks = project.tasks.findAll {
+                        it.name.toLowerCase().startsWith(ClassWorldsPluginConstants.CLASSWORLDS_EXTENSION_NAME)
+                }
+
+                expect: 'We should have couple of tasks, the aggregate task and its sub-tasks'
                 tasks.size() == ClassWorldsPlugin.CLASSWORLDS_SUB_TASKS_NAMES.size() + 1
         }
 }

@@ -13,38 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.rimerosolutions.gradle.plugins.classworlds.tasks;
-
-import java.io.File;
-import java.util.List;
-
-import org.gradle.api.Project
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.InputDirectory;
-import org.gradle.api.tasks.TaskValidationException
-import org.gradle.testfixtures.ProjectBuilder
+package com.rimerosolutions.gradle.plugins.classworlds.tasks
 
 import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
-
-import spock.lang.Specification
 
 /**
  * Spock test for the <code>classworldsInitStaginDir</code> task.
  * 
  * @author Yves Zoundi
  */
-public class ClassWorldsAssemblyTaskSpec extends ClassWorldsTaskSpec {
-
-        def 'When inputs are missing an exception should be thrown'() {
-                given: 'The task is configured with no inputs'
-                def task = project.task(ClassWorldsAssemblyTask.TASK_NAME, type: ClassWorldsAssemblyTask)
-
-                when: 'The task is executed'
-                task.execute()
-
-                then: 'An TaskValidationException error should be thrown'
-                thrown(TaskValidationException)
-        }
+class ClassWorldsAssemblyTaskSpec extends ClassWorldsTaskSpec {
 
         def 'With a stagingDir configured, the task should run fine'() {
                 given: 'The staging dir is set'
@@ -67,5 +45,15 @@ public class ClassWorldsAssemblyTaskSpec extends ClassWorldsTaskSpec {
 
                 expect: 'The archive zip should be there'
                 new File("${project.buildDir}/${assemblyName}${ClassWorldsPluginConstants.Archives.EXTENSION_ZIP}").exists()
+        }
+
+        @Override
+        Class getTaskClass() {
+                ClassWorldsAssemblyTask
+        }
+
+        @Override
+        String getTaskName() {
+                ClassWorldsAssemblyTask.TASK_NAME
         }
 }

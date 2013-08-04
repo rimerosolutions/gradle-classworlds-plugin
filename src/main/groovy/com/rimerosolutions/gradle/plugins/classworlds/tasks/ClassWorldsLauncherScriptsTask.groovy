@@ -31,25 +31,50 @@ import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
  */
 class ClassWorldsLauncherScriptsTask extends DefaultTask {
 
+        /**
+         * The task name.
+         */
         static final String TASK_NAME = 'classWorldsLauncherScripts'
+        
+        /**
+         * The task description.
+         */
         static final String TASK_DESCRIPTION = 'Generate ClassWorlds launcher scripts.'
 
         @Input
+        /**
+         * The main class name.
+         */
         String appMainClassName
 
         @Input
+        /**
+         * The application home JVM property.
+         */
         String appHome
 
         @OutputDirectory
+        /**
+         * The launcher scripts folder.
+         */
         File scriptsDir
 
         @Input
+        /**
+         * The launcher scripts JVM options.
+         */
         String jvmOptions
 
         @TaskAction writeLaunchers() {
                 generateLauncherScripts(scriptsDir, project.ext[ClassWorldsCopyBootstrapJarTask.BOOTSTRAP_JAR_FILENAME_PROPERTY])
         }
 
+        /**
+         * Generates the Unix and Windows launcher scripts.
+         * 
+         * @param binDir The scripts directory
+         * @param bootJarFileName The <code>plexus-classworlds</code> bootstrap jar
+         */
         void generateLauncherScripts(File binDir, String bootJarFileName) {
                 logger.info 'Generating launchers scripts.'
 

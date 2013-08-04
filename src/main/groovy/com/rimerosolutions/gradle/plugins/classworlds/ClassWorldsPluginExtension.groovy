@@ -24,14 +24,43 @@ import org.gradle.api.Project
  */
 class ClassWorldsPluginExtension {
 
+        /**
+         * The application home location.
+         */
         String appHome
+        
+        /**
+         * The application main class name.
+         */
         String appMainClassName
+        
+        /**
+         * 
+         */
         String assemblyFileName
+        
+        /**
+         * The launcher JVM options.
+         */
         String jvmOptions
+        
+        /**
+         * The staging directory to use to prepare assemblies.
+         */
         File stagingDir
 
+        /**
+         * The assembly formats.
+         * 
+         * @see ClassWorldsPluginConstants.AssemblyFormats
+         */
         List<String> assemblyFormats
 
+        /**
+         * Apply the default ClassWorlds plugin settings to a project.
+         * 
+         * @param project The Gradle project
+         */
         void configureDefaults(Project project) {
                 project.logger.info 'Configuring default ClassWorlds settings'
 
@@ -42,6 +71,12 @@ class ClassWorldsPluginExtension {
                 appHome = appHome ?: 'APP_HOME'
         }
 
+        /**
+         * Perform arbitrary actions with a given staging folder for flexibility.
+         * 
+         * @param stagingFolder The assembly staging folder
+         * @param closure The closure block to run
+         */
         void doWithStagingDir(File stagingFolder, Closure closure) {
                 closure(stagingFolder)
         }
