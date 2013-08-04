@@ -2,14 +2,20 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 signing {
-        required = { gradle.taskGraph.hasTask("uploadArchives") && !version.endsWith("SNAPSHOT") }
+        required = {
+                gradle.taskGraph.hasTask('uploadArchives') && !version.endsWith('SNAPSHOT')
+        }
+        
         sign configurations.archives
 }
 
 uploadArchives {
         repositories {
                 mavenDeployer {
-                        beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+                        beforeDeployment { MavenDeployment deployment ->
+                                signPom(deployment)
+                        }
+                        
                         uniqueVersion = false
 
                         def repoUsername = ''
@@ -23,11 +29,11 @@ uploadArchives {
                                 repoPassword = project.getProperty('sonatype.password')
                         }
 
-                        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
                                 authentication(userName: repoUsername, password: repoPassword)
                         }
 
-                        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
                                 authentication(userName: repoUsername, password: repoPassword)
                         }
 
@@ -45,16 +51,16 @@ uploadArchives {
 
                                 licenses {
                                         license {
-                                                name "The Apache Software License, Version 2.0"
-                                                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                                                distribution "repo"
+                                                name 'The Apache Software License, Version 2.0'
+                                                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                                                distribution 'repo'
                                         }
                                 }
 
                                 developers {
                                         developer {
                                                 id "${organizationId}"
-                                                name "Yves Zoundi"
+                                                name 'Yves Zoundi'
                                                 email "${organizationId}@gmail.com"
                                         }
                                 }

@@ -15,6 +15,8 @@
  */
 package com.rimerosolutions.gradle.plugins.classworlds
 
+import org.gradle.api.Project
+
 /**
  * ClassWorlds Plugin extension.
  *
@@ -22,14 +24,25 @@ package com.rimerosolutions.gradle.plugins.classworlds
  */
 class ClassWorldsPluginExtension {
 
-        String appLocationEnvVariableName
+        String appHome
         String appMainClassName
         String assemblyFileName
         String jvmOptions
-        File assemblyDirectory
-        List<String> assemblyFormats = []        
+        File stagingDir
 
-        def doWithStagingDir(File stagingFolder, Closure closure) {
+        List<String> assemblyFormats
+
+        void configureDefaults(Project project) {
+                project.logger.info 'Configuring default ClassWorlds settings'
+
+                assemblyFileName = assemblyFileName ?: "${project.name}-${project.version}"
+                stagingDir = stagingDir ?: new File(project.buildDir.absolutePath, ClassWorldsPluginConstants.AssemblyDirNames.STAGING)
+                assemblyFormats = assemblyFormats ?: [ClassWorldsPluginConstants.AssemblyFormats.ZIP.name()]
+                jvmOptions = jvmOptions ?: ClassWorldsPluginConstants.DEFAULT_JVM_OPTIONS
+                appHome = appHome ?: 'APP_HOME'
+        }
+
+        void doWithStagingDir(File stagingFolder, Closure closure) {
                 closure(stagingFolder)
         }
 }

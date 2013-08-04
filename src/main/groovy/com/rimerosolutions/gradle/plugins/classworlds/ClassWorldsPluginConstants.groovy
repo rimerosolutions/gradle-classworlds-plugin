@@ -38,7 +38,7 @@ final class ClassWorldsPluginConstants {
         static final String TEMPLATES_LOCATION = 'com/rimerosolutions/gradle/plugins/classworlds/templates'
 
         /** Default JVM options. */
-        static final String DEFAULT_JVM_OPTIONS = '-Xms128m -Xmx512m'
+        static final String DEFAULT_JVM_OPTIONS = '-Xms128m -Xmx512m'        
 
         /** Assembly file formats */
         enum AssemblyFormats {
@@ -66,6 +66,8 @@ final class ClassWorldsPluginConstants {
 
         /** Archives constants. */
         static final class Archives {
+                static final String ARCHIVE_FILE_MODE = '755'
+                
                 /** Zip files extension. */
                 static final String EXTENSION_ZIP = '.zip'
 
@@ -109,7 +111,7 @@ final class ClassWorldsPluginConstants {
                 static final String ETC = 'etc'
                 
                 /** Bin directory name. */
-                static final String BIN = 'bin'
+                static final String BIN = 'bin'                
         }
 
 }

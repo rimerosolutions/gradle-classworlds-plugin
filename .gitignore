@@ -2,3 +2,7 @@
 .gradle
 build
 TAGS
+/bin
+.classpath
+.project
+.settings
