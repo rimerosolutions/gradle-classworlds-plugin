@@ -43,7 +43,7 @@ class ClassWorldsAssemblyTaskSpec extends ClassWorldsTaskSpec {
                 then: 'When the task is executed'
                 project.tasks[ClassWorldsAssemblyTask.TASK_NAME].execute()
 
-                expect: 'The archive zip should be there'
+                expect: 'The archive zip should be in the build directory'
                 new File("${project.buildDir}/${assemblyName}${ClassWorldsPluginConstants.Archives.EXTENSION_ZIP}").exists()
         }
 

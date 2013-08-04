@@ -56,7 +56,7 @@ class ClassWorldsCopyDependenciesTaskSpec extends ClassWorldsTaskSpec {
                 then: 'When the task is executed'
                 project.tasks[ClassWorldsCopyDependenciesTask.TASK_NAME].execute() 
                 
-                expect: 'The only jar dependency should be copied to the lib directory'
+                expect: 'The classworlds bootstrap dependency should end up inside the lib directory'
                 new File("$libDirectory/${libJar.name}").exists()
         }
 }

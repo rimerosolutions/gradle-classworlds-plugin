@@ -56,7 +56,7 @@ class ClassWorldsLauncherScriptsTaskSpec extends ClassWorldsTaskSpec {
                 then: 'When the task is executed'
                 project.tasks[ClassWorldsLauncherScriptsTask.TASK_NAME].execute() 
                 
-                expect: 'The classworlds configuration file should be present'                
+                expect: 'The classworlds launcher scripts should be present'                
                 new File("$binDirectory/${ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_TEMPLATES_FILENAMES_MAPPING[0]}").exists()
                 new File("$binDirectory/${ClassWorldsPluginConstants.ScriptConstants.LAUNCHER_TEMPLATES_FILENAMES_MAPPING[1]}").exists()
         }

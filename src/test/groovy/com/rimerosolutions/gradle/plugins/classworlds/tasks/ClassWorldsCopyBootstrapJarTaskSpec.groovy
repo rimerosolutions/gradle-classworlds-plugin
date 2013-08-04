@@ -66,7 +66,7 @@ class ClassWorldsCopyBootstrapJarTaskSpec extends ClassWorldsTaskSpec {
                 then: 'When the task is executed'
                 project.tasks[BOOTSTRAP_TASK_NAME].execute() 
                 
-                expect: 'The classworlds jar file should be present'
+                expect: 'The classworlds jar file should be in the boot folder'
                 new File("$bootDirectory/${project.ext[ClassWorldsCopyBootstrapJarTask.BOOTSTRAP_JAR_FILENAME_PROPERTY]}").exists()
         }
 }
