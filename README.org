@@ -1,6 +1,8 @@
 #+TITLE: Gradle ClassWorlds Assembly Plugin
 
-[[https://travis-ci.org/rimerosolutions/gradle-classworlds-plugin][travis.ci build status page]] [[https://travis-ci.org/rimerosolutions/gradle-classworlds-plugin.png]]
+[[https://travis-ci.org/rimerosolutions/gradle-classworlds-plugin][Build status page]]
+#+ATTR_HTML: style="float:left;"
+[[https://travis-ci.org/rimerosolutions/gradle-classworlds-plugin.png]]
 
 * Summary
 
