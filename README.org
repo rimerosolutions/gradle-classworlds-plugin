@@ -1,12 +1,16 @@
 #+TITLE: Gradle ClassWorlds Assembly Plugin
 
+#+ATTR_HTML: alt="Travis CI Build Status" title="Build status" align="left"
+[[https://travis-ci.org/rimerosolutions/gradle-classworlds-plugin.png]]
+#+HTML: <br clear="all"><br>
+
 * Summary
 
 The Gradle ClassWorlds Assembly Plugin is a simple [[http://www.gradle.org/][Gradle]] plugin that generates a simple archived distribution of your project, using [[http://classworlds.codehaus.org/launchusage.html][Classworlds]] as application launcher.
 
 Extract the archive(s) and it's ready to go! 
 
-This plugin is an alternative to the [[http://www.gradle.org/docs/current/userguide/application_plugin.html][Gradle application plugin]]. 
+This plugin is an alternative to the [[http://www.gradle.org/docs/current/userguide/application_plugin.html][Gradle application plugin]] for the Archive generation part(Not the application launching features). 
 
 In terms of transparency, launching and assembly capabilities, you can perform arbitrary actions with the staging directory via a configuration closure.
 
