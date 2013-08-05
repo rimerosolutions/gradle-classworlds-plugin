@@ -1,6 +1,6 @@
 language: groovy
-install: ./gradlew assemble
-script: ./gradlew clean build
+install: ./gradlew assemble --no-color
+script: ./gradlew clean build --no-color
 notifications:
   email: false
 branches:
