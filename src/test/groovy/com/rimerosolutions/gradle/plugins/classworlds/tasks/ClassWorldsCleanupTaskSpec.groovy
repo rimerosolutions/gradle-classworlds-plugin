@@ -18,7 +18,7 @@ package com.rimerosolutions.gradle.plugins.classworlds.tasks
 import com.rimerosolutions.gradle.plugins.classworlds.ClassWorldsPluginConstants
 
 /**
- * Spock test for the <code>classworldsInitStaginDir</code> task.
+ * Spock test for the <code>classworldsCleanupStagingArea</code> task.
  * 
  * @author Yves Zoundi
  */
