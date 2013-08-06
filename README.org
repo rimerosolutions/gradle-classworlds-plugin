@@ -6,11 +6,12 @@
 
 * Summary
 
-The Gradle ClassWorlds Assembly Plugin is a simple [[http://www.gradle.org/][Gradle]] plugin that generates a simple archived distribution of your project, using [[http://classworlds.codehaus.org/launchusage.html][Classworlds]] as application launcher.
+The Gradle ClassWorlds Assembly Plugin is a simple [[http://www.gradle.org/][Gradle]] plugin that generates a runnable distribution of your project, using [[http://classworlds.codehaus.org/launchusage.html][Classworlds]] as application launcher.
 
 Extract the archive(s) and it's ready to go! 
 
-This plugin is an alternative to the [[http://www.gradle.org/docs/current/userguide/application_plugin.html][Gradle application plugin]] for the Archive generation part(Not the application launching features). 
+This plugin is an alternative to the [[http://www.gradle.org/docs/current/userguide/application_plugin.html][Gradle application plugin]] for the Archive generation part.
+You can reuse the [[http://www.gradle.org/docs/current/javadoc/org/gradle/api/tasks/JavaExec.html][JavaExec]] task to actually test the execution of your application prior to generating a runnable distribution. 
 
 In terms of transparency, launching and assembly capabilities, you can perform arbitrary actions with the staging directory via a configuration closure.
 
@@ -39,7 +40,7 @@ Simplicity is exactly what this Gradle plugin provides:
  - Compress files into an archive and ship it!
 
 * Installation and configuration
- - *Note*: This plugin is now available on a [[https://oss.sonatype.org/content/repositories/snapshots][hosted Maven repository]]!
+ - *Note*: This plugin is now available on a [[https://oss.sonatype.org/content/repositories/snapshots/com/rimerosolutions/gradle/plugins/gradle-classworlds-plugin/][hosted Maven repository]]!
  - *Requirements*: Gradle 1.6+ and JDK 1.6+
 
 ** Installation to your local Maven cache
@@ -85,13 +86,15 @@ Configuration parameters are to be specified inside a =classworlds= block in you
 : }
 
 * Tasks
-The plugin provides one main task called =classworlds= of type [[http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.GradleBuild.html][GradleBuild]] aggregating some nested tasks:
-The sub-tasks of the =classworlds= task are responsible for copying files around and generating launcher related files or folders.
+*Note*: Gradle task names seem to be case insensitive.
+
+The plugin provides one main task called =classWorlds= of type [[http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.GradleBuild.html][GradleBuild]] aggregating some nested tasks:
+The sub-tasks of the =classWorlds= task are responsible for copying files around and generating launcher related files or folders.
  
 Tasks aggregation makes the code more readable as well as more testable. classworlds sub-tasks are not meant to be used directly,
 unless you really need fine-grained control due to some lack of flexibility.
 
-The =classworlds= task generates a zip and/or tar assembly of your project with UNIX and Windows application launchers.
+The =classWorlds= task generates a zip and/or tar assembly of your project with UNIX and Windows application launchers.
 
 Running the =classworlds= task will also trigger the =build= task to generate all the project artifacts.
  : gradle classworlds
