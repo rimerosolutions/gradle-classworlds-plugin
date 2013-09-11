@@ -71,13 +71,11 @@ Configuration parameters are to be specified inside a =classworlds= block in you
 : classworlds {
 :   // mandatory inputs
 :   appMainClassName = 'com.Main'
-:
 :   // optional inputs
 :   appHome='MY_APPLICATION_HOME_IF_YOU_NEED_IT' // Set as system property
 :   assemblyFileName="application_default_is_project_name_and_version"
 :   assemblyFormats = ['zip', 'tar'] // only zip by default
 :   jvmOptions = '-Xms512m -Xmx1g' // default is -Xmx128m -Xmx512m
-:
 :   doWithStagingDir = { stagingFolder ->
 :     println 'Customizations, other actions here if needed'
 :   }
