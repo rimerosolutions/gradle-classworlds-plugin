@@ -39,7 +39,7 @@ Simplicity is exactly what this Gradle plugin provides:
  - Launching the application is just a matter of having all the dependencies in the classpath and running the main method of your application entry point.
  - Compress files into an archive and ship it!
 
-* Installation and configuration
+* Installation and configurationh
  - *Note*: This plugin is now available on a [[https://oss.sonatype.org/content/repositories/snapshots/com/rimerosolutions/gradle/plugins/gradle-classworlds-plugin/][hosted Maven repository]]!
  - *Requirements*: Gradle 1.6+ and JDK 1.6+
 
@@ -57,12 +57,10 @@ After that, you can apply the =classworlds= plugin.
  :   repositories {
  :     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
  :   }
- :
  :   dependencies {
  :     classpath 'com.rimerosolutions.gradle.plugins:gradle-classworlds-plugin:0.0.1-SNAPSHOT'
  :   }
  : }
- : 
  : apply plugin: 'classworlds'
 
 ** Plugin configuration
